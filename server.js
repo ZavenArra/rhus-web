@@ -1,10 +1,28 @@
 var http = require('http');
+var httpProxy = require('http-proxy');
 var fs = require('fs');
 var path = require('path');
+
+
+
+var proxy = new httpProxy.HttpProxy({
+  target: {
+    host: 'localhost', 
+    port: 5984
+  }
+});
  
 http.createServer(function (request, response) {
  
     console.log('request starting...');
+
+    console.log(request.url);
+    if(request.url.indexOf('/couchdb') == 0){
+      //proxy this request to couchdb
+      request.url = request.url.replace('couchdb/','');
+      proxy.proxyRequest(request, response);
+      return;
+    }
      
     var filePath = '.' + request.url;
     if (filePath == './')
@@ -37,7 +55,7 @@ http.createServer(function (request, response) {
         }
         else {
             response.writeHead(404);
-            response.end();
+            response.end('404: File not found');
         }
     });
      
