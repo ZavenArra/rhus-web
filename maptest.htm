@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <title>OpenLayers Basic OSM Example</title>
+    <link rel="stylesheet" href="thirdparty/openlayers/theme/default/style.css" type="text/css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/wildStyle.css">
+    <link rel="stylesheet" type="text/css" href="/css/google.css">
+
+
+    <script src="thirdparty/openlayers/OpenLayers.js"></script>
+    <script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+    <script src="thirdparty/js/mootools.js"></script>
+    <script src="js/rhus.js"></script>
+
+
+    <script type="text/javascript">
+        var map, layer;
+        function init(){
+            alert('Holy Shit!!!!!');
+            map = new OpenLayers.Map( 'map');
+            layer = new OpenLayers.Layer.OSM( "Simple OSM Map");
+            map.addLayer(layer);
+            map.setCenter(
+                new OpenLayers.LonLat(-82.913, 42.417).transform(
+                    new OpenLayers.Projection("EPSG:4326"),
+                    map.getProjectionObject()
+                ), 12
+            );    
+        }
+    </script>
+  </head>
+  <body onload="init()">
+
+				<div class="menu">
+					
+					<div class="header">
+					<a id="mapButton" href="#">Wildflowers of Detroit</a>
+					</div>
+
+					<div class="menuNav">
+						<div class="navItem">
+							<a  id="getInvolvedButton" href="#">get involved!</a></div>
+						<div class="navItem">
+							<a id="timelineButton" href="#">timeline</a></div>
+						<div class="navItem">
+							<a id="aboutButton" href="#">about</a></div>
+					</div>
+				</div>
+
+
+
+			<div class="mapcontainer">
+        <div id="map" class="smallmap" style="display:block"></div>
+			</div>
+
+
+        <div id="getInvolved" style="display:none" >This is the get involved div</div>
+        <div id="timeline" style="display:none" >This is the timeline div</div>
+        <div id="about" style="display:none" >This is the about div</div>
+
+				</div>
+        
+  </body>
+</html>
+
