@@ -15,7 +15,7 @@ rhus.navigation = new Class({
 
   addMarkers: function() {
 
-  }
+  },
 
   menuCallback: function(showPage){
 
