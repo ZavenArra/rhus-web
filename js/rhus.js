@@ -4,7 +4,7 @@ rhus = {};
 rhus.navigation = new Class({
   activePage: 'map',
   pages:      ['map', 'getInvolved', 'timeline', 'about'],
-  
+
 
   initialize: function(){
     document.id('mapButton').addEvent('click', this.menuCallback('map').bind(this));
@@ -13,12 +13,16 @@ rhus.navigation = new Class({
     document.id('aboutButton').addEvent('click', this.menuCallback('about').bind(this));
   },
 
+  addMarkers: function() {
+
+  }
+
   menuCallback: function(showPage){
 
     return  function(event){
       event.stop();
       if(this.currentPage == showPage){
-         return;
+        return;
       }
 
       this.pages.each(function(page){
@@ -38,6 +42,6 @@ rhus.navigation = new Class({
 
 var navigation;
 window.addEvent( "domready", function(){
-    navigation = new rhus.navigation();
-    console.log('Dom is Ready');
+  navigation = new rhus.navigation();
+  console.log('Dom is Ready');
 });
