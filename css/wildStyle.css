@@ -1,0 +1,84 @@
+
+body{
+	background-color: #000000;
+	background-image: url("../resources/wood.png");
+	background-repeat: no-repeat;
+	margin-left:auto;
+	margin-right:auto;
+	width:1050px;
+	padding:0px;
+	font-family:Helvetica Neue, sans-serif;
+
+}
+
+.menu{
+
+}
+
+
+.header a{
+	background-image:url("../resources/header.png");
+	width:300px;
+	height:57px;
+	margin:13px 0px 0px 0px;
+	display:block;
+	text-indent:-40000px;
+	float:left;
+}
+
+
+.menuNav{
+	margin-top:13px;
+}
+
+.menuNav {
+	color:#9A9E9A;
+	text-decoration:none;
+	margin:0px 20px 0px 0px;
+	font-size:12px;
+}
+
+
+.navItem a{
+	text-align:center;
+	background-image:url("../resources/menu.png");
+	width:60px;
+	height:58px;
+	float:left;
+	margin-left:20px;
+	margin-top:10px;
+	  color:#9A9E9A;
+		  text-decoration:none;
+
+}
+
+.menuNav a:hover {
+	background-image:url("../resources/menuHover.png");
+	width:60px;
+	height:58px;
+	float:left;
+	margin-left:20px;
+	margin-top:10px;
+
+}
+
+.mapContainer{
+	width:973px;
+	height:574px;
+}
+	
+#involved{
+	padding-top:30;
+	text-align:center;
+}
+
+
+.timeline{
+	width:975px;
+	height:575px;
+}
+
+.timeline img{
+	margin-top:42px;
+	margin-left:13px;
+}
