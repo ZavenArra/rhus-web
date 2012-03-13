@@ -16,12 +16,19 @@ rhus.navigation = new Class({
   menuCallback: function(showPage){
 
     return  function(event){
-
       event.stop();
+      if(this.currentPage == showPage){
+         return;
+      }
+
       this.pages.each(function(page){
         $(page).style.display = "none";
+        $(page+'Button').removeClass('active');
       });
       $(showPage).style.display = "block";
+      this.currentPage = showPage;
+      console.log('Adding Class');
+      event.target.addClass('active');
 
     };
 

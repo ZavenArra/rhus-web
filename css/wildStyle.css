@@ -38,6 +38,9 @@ body{
 	font-size:12px;
 }
 
+.active {
+	background-image:url("../resources/menuHover.png");
+}
 
 .navItem a{
 	text-align:center;
@@ -53,16 +56,6 @@ body{
 }
 
 .menuNav a:hover {
-	background-image:url("../resources/menuHover.png");
-	width:60px;
-	height:58px;
-	float:left;
-	margin-left:20px;
-	margin-top:10px;
-
-}
-
-.menuNav a highlighted {
 	background-image:url("../resources/menuHover.png");
 	width:60px;
 	height:58px;
