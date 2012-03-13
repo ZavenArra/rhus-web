@@ -38,6 +38,9 @@ body{
 	font-size:12px;
 }
 
+.active {
+	background-image:url("../resources/menuHover.png");
+}
 
 .navItem a{
 	text-align:center;
@@ -61,6 +64,7 @@ body{
 	margin-top:10px;
 
 }
+
 
 .mapContainer{
 padding-top:100px;
