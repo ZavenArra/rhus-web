@@ -10,8 +10,28 @@ rhus.navigation = new Class({
     document.id('mapButton').addEvent('click', this.menuCallback('map').bind(this));
     document.id('getInvolvedButton').addEvent('click', this.menuCallback('getInvolved').bind(this));
     document.id('timelineButton').addEvent('click', this.menuCallback('timeline').bind(this));
-    document.id('aboutButton').addEvent('click', this.menuCallback('about').bind(this));
+    //document.id('aboutButton').addEvent('click', this.menuCallback('about').bind(this));
+
+    $('aboutButton').addEvent('click', function(e) {
+      console.log("In event");
+      e.stop();
+
+      var url = "lipsum.html";
+
+      var myJSONRemote = new Request.JSON({
+      url: url,
+      method: 'post', 
+      onComplete: function(response){console.log(response+"whatever")}}).send();  //this.mapDataRequestCallback});
+
+    });
   },
+
+  mapDataRequestCallback: function(responseJSON, responseText){
+    console.log("mapDataRequestCallback");
+    console.log(responseTEXT);
+  },
+
+  
 
   addMarkers: function() {
 
