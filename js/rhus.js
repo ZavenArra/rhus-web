@@ -10,7 +10,7 @@ rhus.navigation = new Class({
     document.id('mapButton').addEvent('click', this.menuCallback('map').bind(this));
     document.id('getInvolvedButton').addEvent('click', this.menuCallback('getInvolved').bind(this));
     document.id('timelineButton').addEvent('click', this.menuCallback('timeline').bind(this));
-    //document.id('aboutButton').addEvent('click', this.menuCallback('about').bind(this));
+    document.id('aboutButton').addEvent('click', this.menuCallback('about').bind(this));
 
     $('aboutButton').addEvent('click', function(e) {
       console.log("In event");
@@ -52,7 +52,7 @@ rhus.navigation = new Class({
       $(showPage).style.display = "block";
       this.currentPage = showPage;
       console.log('Adding Class');
-      event.target.addClass('active');
+      event.target.getParent().addClass('active');
 
     };
 

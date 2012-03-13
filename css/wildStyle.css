@@ -12,13 +12,15 @@ body{
 }
 
 .menu{
-
+	height:100px;
+	width:600px;
+	float:left;
 }
 
 
 .header a{
 	background-image:url("../resources/header.png");
-	width:300px;
+	width:310px;
 	height:57px;
 	margin:13px 0px 0px 0px;
 	display:block;
@@ -44,12 +46,12 @@ body{
 
 .navItem a{
 	text-align:center;
-	background-image:url("../resources/menu.png");
-	width:60px;
-	height:58px;
+	/*background-image:url("../resources/menu.png");*/
+	width:62px;
+	height:59px;
 	float:left;
 	margin-left:20px;
-	margin-top:10px;
+	margin-top:12px;
 	  color:#9A9E9A;
 		  text-decoration:none;
 
@@ -57,11 +59,11 @@ body{
 
 .menuNav a:hover {
 	background-image:url("../resources/menuHover.png");
-	width:60px;
-	height:58px;
+	width:62px;
+	height:59px;
 	float:left;
 	margin-left:20px;
-	margin-top:10px;
+	margin-top:12px;
 
 }
 
@@ -69,7 +71,18 @@ body{
 .mapContainer{
 padding-top:100px;
 }
+
+.logo{
+	float:right;
+	margin-right:370px;
 	
+}
+
+.logo img{
+	position:absolute;
+	z-index:-555;
+}
+
 #involved{
 	padding-top:30;
 	text-align:center;
@@ -82,6 +95,6 @@ padding-top:100px;
 }
 
 .timeline img{
-	margin-top:42px;
+	/*margin-top:42px;*/
 	margin-left:13px;
 }
