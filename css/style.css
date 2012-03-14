@@ -77,9 +77,10 @@ font-weight: bold;
 *  * Map Examples Specific
 *   */
 .smallmap {
-width: 983px;
-height: 573px;
-border: 1px solid #ccc;
+width: 974px;
+height: 574px;
+border: 1px solid #000000;
+
 }
 #tags {
 display: none;

@@ -68,14 +68,15 @@ body{
 }
 
 
-.mapContainer{
-padding-top:100px;
+.mapcontainer{
+padding-top:128px;
+padding-left:12px;
 }
 
 .logo{
 	float:right;
 	margin-right:370px;
-	
+	padding-top:5px;	
 }
 
 .logo img{
