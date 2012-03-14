@@ -12,33 +12,8 @@ rhus.navigation = new Class({
     document.id('timelineButton').addEvent('click', this.menuCallback('timeline').bind(this));
     document.id('aboutButton').addEvent('click', this.menuCallback('about').bind(this));
 
-    $('aboutButton').addEvent('click', function(e) {
-      console.log("In event");
-      e.stop();
-
-      //var url = "lipsum.html";
-      var url = "/couchdb/squirrels_of_the_earth/_design/design/_view/all";
-      //var url = "squirrels_of_the_earth/_design/design/_view/all";
-
-      var myJSONRemote = new Request.JSON({
-      url: url,
-      method: 'get', 
-      onComplete: function(response){console.log(response+"whatever")}}).send();  //this.mapDataRequestCallback});
-
-    });
   },
-
-  mapDataRequestCallback: function(responseJSON, responseText){
-    console.log("mapDataRequestCallback");
-    console.log(responseTEXT);
-  },
-
   
-
-  addMarkers: function() {
-
-  },
-
   menuCallback: function(showPage){
 
     return  function(event){
@@ -64,35 +39,60 @@ rhus.navigation = new Class({
 
 rhus.contentProvider = new Class({
   database: "squirrels_of_the_earth",
+  urlPrefix: "/couchdb/",
+  viewPath: "_design/design/_view/all",
+  update_seq:  0, //database sequence number
+  /*TODO: we'll want to track update_seq for each view that's being queried later on, 
+   * or similar strategy for making sure subsequent request
+   * */
 
-  allMapPoints : function(){
+  mapPoints : function(callback){
+
+      var myJSONRemote = new Request.JSON({
+      url: urlPrefix+database+viewPath,
+      method: 'get', 
+      onComplete: callback}).send();  
+
   }
+
 });
 
 rhus.map = new Class({
 
-  map,
-  layer,
+  map : null,
+  osm : null, //OSM layer
 
   initialize: function(){
-    map = new OpenLayers.Map( 'map');
-    osm = new OpenLayers.Layer.OSM( "OSM Map Layer");
-    map.addLayer(osm);
-    map.setCenter(
+    this.map = new OpenLayers.Map( 'map');
+    this.osm = new OpenLayers.Layer.OSM( "OSM Map Layer");
+    this.map.addLayer(this.osm);
+    this.map.setCenter(
       new OpenLayers.LonLat(-82.913, 42.417).transform(
         new OpenLayers.Projection("EPSG:4326"),
-        map.getProjectionObject()
+        this.map.getProjectionObject()
       ), 12
     );    
-    map.addControl(new OpenLayers.Control.LayerSwitcher());
+    this.map.addControl(new OpenLayers.Control.LayerSwitcher());
+  },
+
+  addMarkers: function(){
+
+
+  },
+
+  mapDataRequestCallback: function(responseJSON, responseText){
+    console.log("mapDataRequestCallback");
+    console.log(responseTEXT);
   }
 
 });
 
-var navigation;
-var map;
+var rhNavigation;
+var rhMap;
 window.addEvent( "domready", function(){
   console.log('Dom is Ready');
-  navigation = new rhus.navigation();
-  map = new rhus.map();
+  rhNavigation = new rhus.navigation();
+  rhMap = new rhus.map();
+  //set bounds?
+  rhMap.addMarkers();
 });
