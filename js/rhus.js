@@ -43,16 +43,34 @@ rhus.contentProvider = new Class({
   viewPath: "_design/design/_view/all",
   update_seq:  0, //database sequence number
   /*TODO: we'll want to track update_seq for each view that's being queried later on, 
-   * or similar strategy for making sure subsequent request
-   * */
+  * or similar strategy for making sure subsequent request
+  * */
+  startKey: null,
 
   mapPoints : function(callback){
 
-      var myJSONRemote = new Request.JSON({
-      url: urlPrefix+database+viewPath,
+    url = this.urlPrefix + this.database + '/' + this.viewPath + "?update_seq=true&startKey="+this.startKey;
+    console.log("CouchDB: "+url);
+    var myJSONRemote = new Request.JSON({
+      url: url,
       method: 'get', 
-      onComplete: callback}).send();  
+    onComplete: this.requestCallback(callback).bind(this) }).send();  
 
+  },
+
+  requestCallback : function(callerCallback){
+    return function(responseJSON){
+      console.log("Response from couch");
+      console.log(responseJSON);
+      this.update_seq = responseJSON.update_seq;
+      responseJSON.rows.each(function(row){
+        this.startKey = row.value.id;   //This assumes a response sorted by startKey, actually no good
+                                        //instead this should run the whole query again, or use _changes somehow
+      });
+      console.log("Calling callback" + callerCallback);
+      return callerCallback(responseJSON);
+     // return callback(callerCallback, responseJSON);
+    }
   }
 
 });
@@ -61,8 +79,13 @@ rhus.map = new Class({
 
   map : null,
   osm : null, //OSM layer
+  provider : null,
+  icon : null,
+  markers : null,
 
-  initialize: function(){
+  initialize: function(contentProvider){
+    this.provider = contentProvider;
+
     this.map = new OpenLayers.Map( 'map');
     this.osm = new OpenLayers.Layer.OSM( "OSM Map Layer");
     this.map.addLayer(this.osm);
@@ -72,17 +95,49 @@ rhus.map = new Class({
         this.map.getProjectionObject()
       ), 12
     );    
+    this.markers = new OpenLayers.Layer.Markers( "Plants" );
+    this.map.addLayer(this.markers);
+
+    //map icons
+    var size = new OpenLayers.Size(21,25);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    this.icon = new OpenLayers.Icon('css/img/close.gif', size, offset);
+
+    lonlat = new OpenLayers.LonLat(45,10).transform(
+      new OpenLayers.Projection("EPSG:4326"),
+      this.map.getProjectionObject());
+    marker = new OpenLayers.Marker(lonlat, this.icon.clone());
+    marker.events.register('mousedown', marker, function(evt) { alert(this.lonlat); OpenLayers.Event.stop(evt); });
+    this.markers.addMarker(marker);
+
     this.map.addControl(new OpenLayers.Control.LayerSwitcher());
+
+
+    //Initialize here differet markers the map may need
+    console.log("Initialized");
   },
 
   addMarkers: function(){
-
-
+    console.log("Called addMarkers");
+    callback = this.getMapDataRequestCallback(this);
+    this.provider.mapPoints(callback);
   },
 
-  mapDataRequestCallback: function(responseJSON, responseText){
-    console.log("mapDataRequestCallback");
-    console.log(responseTEXT);
+  getMapDataRequestCallback: function(receiver){
+
+    return function(responseJSON){
+      //console.log("mapDataRequestCallback");
+      //console.log(responseJSON);
+
+      responseJSON.rows.each(function(row){
+        longitude = row.value.longitude;
+        latitude = row.value.latitude;
+        lonlat = new OpenLayers.LonLat(longitude, latitude).transform(
+          new OpenLayers.Projection("EPSG:4326"),
+          receiver.map.getProjectionObject());
+        receiver.markers.addMarker(new OpenLayers.Marker(lonlat,receiver.icon.clone()));
+      });
+    }
   }
 
 });
@@ -92,7 +147,7 @@ var rhMap;
 window.addEvent( "domready", function(){
   console.log('Dom is Ready');
   rhNavigation = new rhus.navigation();
-  rhMap = new rhus.map();
+  rhMap = new rhus.map( new rhus.contentProvider() );
   //set bounds?
   rhMap.addMarkers();
 });
