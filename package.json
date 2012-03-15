@@ -4,7 +4,8 @@
     "author": "Matthew Shultz <deepwinter@winterroot.net>",
     "version": "0.0.1",
     "dependencies": {
-      "http-proxy": "0.8.0"
+      "http-proxy": "0.8.0",
+      "cgi" : "0.0.8"
     },
     "devDependencies": {
     },
