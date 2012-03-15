@@ -20,7 +20,7 @@ var tileProxy = new httpProxy.HttpProxy({
 
 var proxy = new httpProxy.HttpProxy({
   target: {
-    host: 'localhost', 
+    host: 'data.winterroot.net', 
     port: 5984
   }
 });

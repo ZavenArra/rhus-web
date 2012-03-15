@@ -1,7 +1,7 @@
 
 body{
 	background-color: #000000;
-	background-image: url("../resources/wood.png");
+	background-image: url("../resources/wood2.png");
 	background-repeat: no-repeat;
 	margin-left:auto;
 	margin-right:auto;
@@ -71,6 +71,27 @@ body{
 .mapcontainer{
 padding-top:128px;
 padding-left:12px;
+}
+
+#callout{
+	background-image:url("../resources/orangeOVerlay.png");
+	width:151px;
+	height:153px;
+	margin-left:10px;
+	position:absolute;
+	display:none;
+}
+
+#calloutThumbnail{
+	margin-top:43px;
+	margin-left:10px;
+	border:1px solid #781214;
+}
+
+#calloutCloseButton{
+	float:left;
+	margin-top:133px;
+	margin-left:15px;
 }
 
 .logo{
