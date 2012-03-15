@@ -96,7 +96,8 @@ rhus.map = new Class({
     this.map.addLayer(this.osm);
 
     //Add Other Layers
-
+    //topo = new OpenLayers.Layer.OSM( "OSM Map Layer");
+    //this.map.addLayer(topo);
 
 
     this.map.setCenter(
