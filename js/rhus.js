@@ -93,20 +93,71 @@ rhus.map = new Class({
     this.map = new OpenLayers.Map( 'map');
 
     this.osm = new OpenLayers.Layer.OSM( "Open Street Map Layer");
-    this.map.addLayer(this.osm);
+  //  this.map.addLayer(this.osm);
 
-    /* defined for javascript.
+    // defined for javascript.
     if( google ){
-    alert(google);
-    var gmap = new OpenLayers.Layer.Google("Google Streets Layer", {visibility: false});
-    this.map.addLayer(gmap);
+      var gmap = new OpenLayers.Layer.Google("Google Streets Layer", {visibility: false});
+ //     this.map.addLayer(gmap);
     }
-    */
 
     //Add Other Layers
     //topo = new OpenLayers.Layer.OSM( "OSM Map Layer");
     //this.map.addLayer(topo);
+    //
     
+    //Topo
+    /*
+    var drg = new OpenLayers.Layer.WMS("Topo Maps",
+      "http://terraservice.net/ogcmap.ashx",
+    {layers: "DRG"});
+    this.map.addLayer(drg);
+    */
+
+    //Shaded Relief
+    /*
+    shade = new OpenLayers.Layer.WMS("Shaded Relief",
+      "http://ims.cr.usgs.gov:80/servlet19/com.esri.wms.Esrimap/USGS_EDC_Elev_NED_3", 
+    {layers: "HR-NED.IMAGE", reaspect: "false", transparent: 'true'},
+    {
+      opacity: 0.5,
+      singleTile: true
+    }
+    );
+    this.map.addLayer(shade);
+*/
+    
+    
+    /*
+    var nasa = new OpenLayers.Layer.WMS("NASA Global Mosaic",
+      "http://wms.jpl.nasa.gov/wms.cgi",
+    {layers: "modis,global_mosaic"});
+
+    var nasa = new OpenLayers.Layer.WMS("NASA Global Mosaic",
+      "http://wms.jpl.nasa.gov/wms.cgi",
+      {
+        layers: "modis,global_mosaic",
+        transparent: true
+      }, {
+        opacity: 0.5,
+        singleTile: true
+      });
+    */
+
+/*
+    var jpl_wms = new OpenLayers.Layer.WMS( "NASA Global Mosaic",
+      "http://wms.jpl.nasa.gov/wms.cgi", 
+    {layers: "global_mosaic"});
+    this.map.addLayer(jpl_wms);
+    */
+
+    var gsat = new OpenLayers.Layer.Google(
+      "Google Satellite",
+      {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22}
+      // used to be {type: G_SATELLITE_MAP, numZoomLevels: 22}
+     );
+    this.map.addLayer(gsat);
+
     //Add Detroit Overlay
     //And also for timelines...
     //These need to be defined in separate files and loaded per implementation
