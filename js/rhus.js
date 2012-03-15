@@ -71,6 +71,10 @@ rhus.contentProvider = new Class({
       return callerCallback(responseJSON);
      // return callback(callerCallback, responseJSON);
     }
+  },
+
+  getThumbSrc : function(id){
+     return 'couchdb/'+this.database+'/'+id+'/thumb.jpg';
   }
 
 });
@@ -87,8 +91,14 @@ rhus.map = new Class({
     this.provider = contentProvider;
 
     this.map = new OpenLayers.Map( 'map');
+
     this.osm = new OpenLayers.Layer.OSM( "OSM Map Layer");
     this.map.addLayer(this.osm);
+
+    //Add Other Layers
+
+
+
     this.map.setCenter(
       new OpenLayers.LonLat(-82.913, 42.417).transform(
         new OpenLayers.Projection("EPSG:4326"),
@@ -103,15 +113,13 @@ rhus.map = new Class({
     var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
     this.icon = new OpenLayers.Icon('resources/mapPoint.png', size, offset);
 
-    lonlat = new OpenLayers.LonLat(45,10).transform(
-      new OpenLayers.Projection("EPSG:4326"),
-      this.map.getProjectionObject());
-    marker = new OpenLayers.Marker(lonlat, this.icon.clone());
-    marker.events.register('mousedown', marker, function(evt) { alert(this.lonlat); OpenLayers.Event.stop(evt); });
-    this.markers.addMarker(marker);
-
     this.map.addControl(new OpenLayers.Control.LayerSwitcher());
 
+    $('calloutCloseButton').addEvent('click', function(event){
+      event.stop();
+      event.target.getParent().style.display = "none";
+      console.log("Closing Callout");
+    });
 
     //Initialize here differet markers the map may need
     console.log("Initialized");
@@ -135,10 +143,29 @@ rhus.map = new Class({
         lonlat = new OpenLayers.LonLat(longitude, latitude).transform(
           new OpenLayers.Projection("EPSG:4326"),
           receiver.map.getProjectionObject());
-        receiver.markers.addMarker(new OpenLayers.Marker(lonlat,receiver.icon.clone()));
+
+        marker = new OpenLayers.Marker(lonlat,receiver.icon.clone());
+        marker.events.register('mousedown', marker, function(evt) { receiver.showCallout(evt.element, lonlat, row.value.id); OpenLayers.Event.stop(evt); });
+        receiver.markers.addMarker(marker);
       });
     }
+  },
+
+  showCallout: function(mapPointElement, lonlat, id){
+     callout = $('callout');
+     calloutThumbnail = callout.getElementById('calloutThumbnail');;
+     calloutThumbnail.src = this.provider.getThumbSrc(id);
+     callout.inject(mapPointElement);
+     callout.style.display ="block";
+
+  },
+
+  hideCallout: function(mapPointElement, lonlat, id){
+
   }
+
+
+
 
 });
 
