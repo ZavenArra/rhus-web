@@ -2,7 +2,20 @@ var http = require('http');
 var httpProxy = require('http-proxy');
 var fs = require('fs');
 var path = require('path');
+var cgi = require('cgi');
 
+var tilecache = http.createServer(
+  cgi('tilecache-2.11/tilecache.cgi')
+).listen(6078);
+
+
+var tileProxy = new httpProxy.HttpProxy({
+  target: {
+    host: 'localhost', 
+    port: 6078
+  }
+});
+ 
 
 
 var proxy = new httpProxy.HttpProxy({
@@ -23,6 +36,14 @@ http.createServer(function (request, response) {
       proxy.proxyRequest(request, response);
       return;
     }
+
+
+    if(request.url.indexOf('/tilecache-2.11/tilecache.cgi') == 0){
+      request.url = request.url.replace('tilecache-2.11/','');
+      tileProxy.proxyRequest(request, response);
+      return;
+    }
+     
      
     var filePath = '.' + request.url;
     if (filePath == './')
