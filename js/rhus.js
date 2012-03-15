@@ -99,9 +99,9 @@ rhus.map = new Class({
     this.map.addLayer(this.markers);
 
     //map icons
-    var size = new OpenLayers.Size(21,25);
+    var size = new OpenLayers.Size(11,10);
     var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-    this.icon = new OpenLayers.Icon('css/img/close.gif', size, offset);
+    this.icon = new OpenLayers.Icon('resources/mapPoint.png', size, offset);
 
     lonlat = new OpenLayers.LonLat(45,10).transform(
       new OpenLayers.Projection("EPSG:4326"),
