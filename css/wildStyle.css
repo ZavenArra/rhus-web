@@ -79,6 +79,7 @@ padding-left:12px;
 	height:153px;
 	margin-left:10px;
 	position:absolute;
+	display:none;
 }
 
 #calloutThumbnail{
