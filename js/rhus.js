@@ -41,36 +41,49 @@ rhus.contentProvider = new Class({
   database: "squirrels_of_the_earth",
   urlPrefix: "/couchdb/",
   viewPath: "_design/design/_view/all",
-  update_seq:  0, //database sequence number
+  update_seq:  -1, //database sequence number
+  callerCallback: null,
+
   /*TODO: we'll want to track update_seq for each view that's being queried later on, 
   * or similar strategy for making sure subsequent request
   * */
   startKey: null,
 
+
   mapPoints : function(callback){
 
     url = this.urlPrefix + this.database + '/' + this.viewPath + "?update_seq=true&startKey="+this.startKey;
     console.log("CouchDB: "+url);
-    var myJSONRemote = new Request.JSON({
-      url: url,
-      method: 'get', 
-    onComplete: this.requestCallback(callback).bind(this) }).send();  
 
+    this.callerCallback = callback;
+    this.requery();
+
+    //Set Timeout to update the map
+    this.timer = this.requery.bind(this).periodical(8000);
   },
+
 
   requestCallback : function(callerCallback){
     return function(responseJSON){
-      console.log("Response from couch");
-      console.log(responseJSON);
-      this.update_seq = responseJSON.update_seq;
-      responseJSON.rows.each(function(row){
-        this.startKey = row.value.id;   //This assumes a response sorted by startKey, actually no good
-                                        //instead this should run the whole query again, or use _changes somehow
-      });
-      console.log("Calling callback" + callerCallback);
-      return callerCallback(responseJSON);
+      if(responseJSON.update_seq > this.update_seq){
+        console.log("Got New Data");
+        this.update_seq = responseJSON.update_seq;
+        return this.callerCallback(responseJSON);
+      }
      // return callback(callerCallback, responseJSON);
     }
+  },
+
+  requery : function(){
+
+    console.log("Requery");
+
+    var myJSONRemote = new Request.JSON({
+      url: url,
+      method: 'get', 
+    onComplete: this.requestCallback(this.callerCallback).bind(this) }).send();  
+
+
   },
 
   getThumbSrc : function(id){
@@ -81,24 +94,26 @@ rhus.contentProvider = new Class({
 
 rhus.map = new Class({
 
+  layers : [], //TODO: refactor all layers into array
   map : null,
   osm : null, //OSM layer
+  gsta: null,
   provider : null,
   icon : null,
   markers : null,
+  timer : null,
 
   initialize: function(contentProvider){
+  
     this.provider = contentProvider;
 
     this.map = new OpenLayers.Map( 'map');
 
     this.osm = new OpenLayers.Layer.OSM( "Open Street Map Layer");
-  //  this.map.addLayer(this.osm);
 
     // defined for javascript.
     if( google ){
       var gmap = new OpenLayers.Layer.Google("Google Streets Layer", {visibility: false});
- //     this.map.addLayer(gmap);
     }
 
     //Add Other Layers
@@ -151,17 +166,22 @@ rhus.map = new Class({
     this.map.addLayer(jpl_wms);
     */
 
-    var gsat = new OpenLayers.Layer.Google(
+    this.gsat = new OpenLayers.Layer.Google(
       "Google Satellite",
       {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22}
       // used to be {type: G_SATELLITE_MAP, numZoomLevels: 22}
      );
-    this.map.addLayer(gsat);
 
     //Add Detroit Overlay
     //And also for timelines...
     //These need to be defined in separate files and loaded per implementation
     //Detroit.js, Squirrels.js, etc.
+    //
+
+    //TODO: All layers should be added in the order that we want to show them
+    this.map.addLayer(this.gsat);
+    this.map.addLayer(this.osm);
+    this.map.addLayer(gmap);
 
     var styles = new OpenLayers.StyleMap({
       "default": new OpenLayers.Style(null, {
@@ -390,7 +410,9 @@ rhus.map = new Class({
 
     //Initialize here differet markers the map may need
     console.log("Initialized");
+
   },
+
 
   addMarkers: function(){
     console.log("Called addMarkers");
@@ -398,12 +420,16 @@ rhus.map = new Class({
     this.provider.mapPoints(callback);
   },
 
+
   getMapDataRequestCallback: function(receiver){
 
     return function(responseJSON){
       //console.log("mapDataRequestCallback");
       //console.log(responseJSON);
+      //
+      receiver.markers.clearMarkers();
 
+      console.log("adding new markers");
       responseJSON.rows.each(function(row){
         longitude = row.value.longitude;
         latitude = row.value.latitude;
