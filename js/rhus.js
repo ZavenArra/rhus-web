@@ -269,16 +269,22 @@ rhus.map = new Class({
       })
     });
 
+    var studyAreaGeometry = new OpenLayers.Protocol.HTTP({
+      url: "data/studyAreaLayer.json",
+      format: new OpenLayers.Format.GeoJSON(
+        {
+          ignoreExtraDims: true
+        }
+      )
+    });
 
+//TODO: Don't reproject in javascript, just reproject the file using proj4, or something else
     var statePlaneProjection = new OpenLayers.Projection("EPSG:4269");
-    statePlaneProjection = new OpenLayers.Projection("EPSG:4326");
+   // statePlaneProjection = new OpenLayers.Projection("EPSG:4326");
     var studyArea = new OpenLayers.Layer.Vector("Study Area Overlay", {
       strategies: [new OpenLayers.Strategy.Fixed()],                
       projection: statePlaneProjection,
-      protocol: new OpenLayers.Protocol.HTTP({
-        url: "data/studyAreaLayer.json",
-        format: new OpenLayers.Format.GeoJSON()
-      }),
+      protocol: ,
       styleMap: styles
     });
 
@@ -389,6 +395,7 @@ rhus.map = new Class({
 
 
 
+
     this.map.setCenter(
       new OpenLayers.LonLat(-83.104019, 42.369959).transform(
         new OpenLayers.Projection("EPSG:4326"),
@@ -460,6 +467,9 @@ rhus.map = new Class({
      console.log(callout);
      calloutThumbnail = callout.getElements('.calloutThumbnail')[0];
      calloutThumbnail.src = this.provider.getThumbSrc(id);
+
+     calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
+     calloutLightboxLink = "couchdb/"+id+"/medium.jpg";
 
      
      callout.inject(mapPointElement);
