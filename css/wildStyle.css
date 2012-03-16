@@ -7,7 +7,7 @@ body{
 	margin-right:auto;
 	width:1050px;
 	padding:0px;
-	font-family:Helvetica Neue, sans-serif;
+	font-family:"Helvetica Neue", sans-serif;
 
 }
 
@@ -94,6 +94,12 @@ padding-left:12px;
 	margin-left:15px;
 }
 
+#myGallery
+{
+	width: 400px !important;
+	height: 200px !important;
+}
+
 .logo{
 	float:right;
 	margin-right:370px;
@@ -119,4 +125,23 @@ padding-left:12px;
 .timeline img{
 	/*margin-top:42px;*/
 	margin-left:13px;
+}
+
+#blank{
+	position:absolute;
+	z-index:-1;
+}
+
+.text{
+	padding-top:20px;
+	margin-left:147px;
+	color:#9A9E9A;
+	width:700px;
+	height:500px;
+	font-size:14px;
+	z-index:2;
+}
+
+.text a{
+	color:#FF7F00;
 }
