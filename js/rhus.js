@@ -270,8 +270,11 @@ rhus.map = new Class({
     });
 
 
+    var statePlaneProjection = new OpenLayers.Projection("EPSG:4269");
+    statePlaneProjection = new OpenLayers.Projection("EPSG:4326");
     var studyArea = new OpenLayers.Layer.Vector("Study Area Overlay", {
       strategies: [new OpenLayers.Strategy.Fixed()],                
+      projection: statePlaneProjection,
       protocol: new OpenLayers.Protocol.HTTP({
         url: "data/studyAreaLayer.json",
         format: new OpenLayers.Format.GeoJSON()
@@ -402,14 +405,17 @@ rhus.map = new Class({
 
     this.map.addControl(new OpenLayers.Control.LayerSwitcher());
 
-    $('calloutCloseButton').addEvent('click', function(event){
-      event.stop();
-      event.target.getParent().style.display = "none";
-      console.log("Closing Callout");
-    });
-
     //Initialize here differet markers the map may need
     console.log("Initialized");
+    
+    $('callout').getElementById('calloutCloseButton').addEvent('click', function(event){
+      console.log("Closing Callout");
+      console.log(event.target);
+      event.stop();
+      $('callout').style.display = "none";
+    });
+
+
 
   },
 
@@ -427,6 +433,10 @@ rhus.map = new Class({
       //console.log("mapDataRequestCallback");
       //console.log(responseJSON);
       //
+
+      callout = $('callout');
+      callout.inject($('body'));
+
       receiver.markers.clearMarkers();
 
       console.log("adding new markers");
@@ -445,9 +455,13 @@ rhus.map = new Class({
   },
 
   showCallout: function(mapPointElement, lonlat, id){
-     callout = $('callout');
-     calloutThumbnail = callout.getElementById('calloutThumbnail');;
+     callout = $('callout');//.clone(true);
+     //callout.id = 'callout';
+     console.log(callout);
+     calloutThumbnail = callout.getElements('.calloutThumbnail')[0];
      calloutThumbnail.src = this.provider.getThumbSrc(id);
+
+     
      callout.inject(mapPointElement);
      callout.style.display ="block";
 
