@@ -41,36 +41,49 @@ rhus.contentProvider = new Class({
   database: "squirrels_of_the_earth",
   urlPrefix: "/couchdb/",
   viewPath: "_design/design/_view/all",
-  update_seq:  0, //database sequence number
+  update_seq:  -1, //database sequence number
+  callerCallback: null,
+
   /*TODO: we'll want to track update_seq for each view that's being queried later on, 
   * or similar strategy for making sure subsequent request
   * */
   startKey: null,
 
+
   mapPoints : function(callback){
 
     url = this.urlPrefix + this.database + '/' + this.viewPath + "?update_seq=true&startKey="+this.startKey;
     console.log("CouchDB: "+url);
-    var myJSONRemote = new Request.JSON({
-      url: url,
-      method: 'get', 
-    onComplete: this.requestCallback(callback).bind(this) }).send();  
 
+    this.callerCallback = callback;
+    this.requery();
+
+    //Set Timeout to update the map
+    this.timer = this.requery.bind(this).periodical(8000);
   },
+
 
   requestCallback : function(callerCallback){
     return function(responseJSON){
-      console.log("Response from couch");
-      console.log(responseJSON);
-      this.update_seq = responseJSON.update_seq;
-      responseJSON.rows.each(function(row){
-        this.startKey = row.value.id;   //This assumes a response sorted by startKey, actually no good
-                                        //instead this should run the whole query again, or use _changes somehow
-      });
-      console.log("Calling callback" + callerCallback);
-      return callerCallback(responseJSON);
+      if(responseJSON.update_seq > this.update_seq){
+        console.log("Got New Data");
+        this.update_seq = responseJSON.update_seq;
+        return this.callerCallback(responseJSON);
+      }
      // return callback(callerCallback, responseJSON);
     }
+  },
+
+  requery : function(){
+
+    console.log("Requery");
+
+    var myJSONRemote = new Request.JSON({
+      url: url,
+      method: 'get', 
+    onComplete: this.requestCallback(this.callerCallback).bind(this) }).send();  
+
+
   },
 
   getThumbSrc : function(id){
@@ -81,36 +94,94 @@ rhus.contentProvider = new Class({
 
 rhus.map = new Class({
 
+  layers : [], //TODO: refactor all layers into array
   map : null,
   osm : null, //OSM layer
+  gsta: null,
   provider : null,
   icon : null,
   markers : null,
+  timer : null,
 
   initialize: function(contentProvider){
+  
     this.provider = contentProvider;
 
     this.map = new OpenLayers.Map( 'map');
 
     this.osm = new OpenLayers.Layer.OSM( "Open Street Map Layer");
-    this.map.addLayer(this.osm);
 
-    /* defined for javascript.
+    // defined for javascript.
     if( google ){
-    alert(google);
-    var gmap = new OpenLayers.Layer.Google("Google Streets Layer", {visibility: false});
-    this.map.addLayer(gmap);
+      var gmap = new OpenLayers.Layer.Google("Google Streets Layer", {visibility: false});
     }
-    */
 
     //Add Other Layers
     //topo = new OpenLayers.Layer.OSM( "OSM Map Layer");
     //this.map.addLayer(topo);
+    //
     
+    //Topo
+    /*
+    var drg = new OpenLayers.Layer.WMS("Topo Maps",
+      "http://terraservice.net/ogcmap.ashx",
+    {layers: "DRG"});
+    this.map.addLayer(drg);
+    */
+
+    //Shaded Relief
+    /*
+    shade = new OpenLayers.Layer.WMS("Shaded Relief",
+      "http://ims.cr.usgs.gov:80/servlet19/com.esri.wms.Esrimap/USGS_EDC_Elev_NED_3", 
+    {layers: "HR-NED.IMAGE", reaspect: "false", transparent: 'true'},
+    {
+      opacity: 0.5,
+      singleTile: true
+    }
+    );
+    this.map.addLayer(shade);
+*/
+    
+    
+    /*
+    var nasa = new OpenLayers.Layer.WMS("NASA Global Mosaic",
+      "http://wms.jpl.nasa.gov/wms.cgi",
+    {layers: "modis,global_mosaic"});
+
+    var nasa = new OpenLayers.Layer.WMS("NASA Global Mosaic",
+      "http://wms.jpl.nasa.gov/wms.cgi",
+      {
+        layers: "modis,global_mosaic",
+        transparent: true
+      }, {
+        opacity: 0.5,
+        singleTile: true
+      });
+    */
+
+/*
+    var jpl_wms = new OpenLayers.Layer.WMS( "NASA Global Mosaic",
+      "http://wms.jpl.nasa.gov/wms.cgi", 
+    {layers: "global_mosaic"});
+    this.map.addLayer(jpl_wms);
+    */
+
+    this.gsat = new OpenLayers.Layer.Google(
+      "Google Satellite",
+      {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22}
+      // used to be {type: G_SATELLITE_MAP, numZoomLevels: 22}
+     );
+
     //Add Detroit Overlay
     //And also for timelines...
     //These need to be defined in separate files and loaded per implementation
     //Detroit.js, Squirrels.js, etc.
+    //
+
+    //TODO: All layers should be added in the order that we want to show them
+    this.map.addLayer(this.gsat);
+    this.map.addLayer(this.osm);
+    this.map.addLayer(gmap);
 
     var styles = new OpenLayers.StyleMap({
       "default": new OpenLayers.Style(null, {
@@ -198,13 +269,22 @@ rhus.map = new Class({
       })
     });
 
+    var studyAreaGeometry = new OpenLayers.Protocol.HTTP({
+      url: "data/studyAreaLayer.json",
+      format: new OpenLayers.Format.GeoJSON(
+        {
+          ignoreExtraDims: true
+        }
+      )
+    });
 
+//TODO: Don't reproject in javascript, just reproject the file using proj4, or something else
+    var statePlaneProjection = new OpenLayers.Projection("EPSG:4269");
+   // statePlaneProjection = new OpenLayers.Projection("EPSG:4326");
     var studyArea = new OpenLayers.Layer.Vector("Study Area Overlay", {
       strategies: [new OpenLayers.Strategy.Fixed()],                
-      protocol: new OpenLayers.Protocol.HTTP({
-        url: "data/studyAreaLayer.json",
-        format: new OpenLayers.Format.GeoJSON()
-      }),
+      projection: statePlaneProjection,
+      protocol: ,
       styleMap: styles
     });
 
@@ -315,6 +395,7 @@ rhus.map = new Class({
 
 
 
+
     this.map.setCenter(
       new OpenLayers.LonLat(-83.104019, 42.369959).transform(
         new OpenLayers.Projection("EPSG:4326"),
@@ -331,15 +412,20 @@ rhus.map = new Class({
 
     this.map.addControl(new OpenLayers.Control.LayerSwitcher());
 
-    $('calloutCloseButton').addEvent('click', function(event){
-      event.stop();
-      event.target.getParent().style.display = "none";
-      console.log("Closing Callout");
-    });
-
     //Initialize here differet markers the map may need
     console.log("Initialized");
+    
+    $('callout').getElementById('calloutCloseButton').addEvent('click', function(event){
+      console.log("Closing Callout");
+      console.log(event.target);
+      event.stop();
+      $('callout').style.display = "none";
+    });
+
+
+
   },
+
 
   addMarkers: function(){
     console.log("Called addMarkers");
@@ -347,12 +433,20 @@ rhus.map = new Class({
     this.provider.mapPoints(callback);
   },
 
+
   getMapDataRequestCallback: function(receiver){
 
     return function(responseJSON){
       //console.log("mapDataRequestCallback");
       //console.log(responseJSON);
+      //
 
+      callout = $('callout');
+      callout.inject($('body'));
+
+      receiver.markers.clearMarkers();
+
+      console.log("adding new markers");
       responseJSON.rows.each(function(row){
         longitude = row.value.longitude;
         latitude = row.value.latitude;
@@ -368,9 +462,16 @@ rhus.map = new Class({
   },
 
   showCallout: function(mapPointElement, lonlat, id){
-     callout = $('callout');
-     calloutThumbnail = callout.getElementById('calloutThumbnail');;
+     callout = $('callout');//.clone(true);
+     //callout.id = 'callout';
+     console.log(callout);
+     calloutThumbnail = callout.getElements('.calloutThumbnail')[0];
      calloutThumbnail.src = this.provider.getThumbSrc(id);
+
+     calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
+     calloutLightboxLink = "couchdb/"+id+"/medium.jpg";
+
+     
      callout.inject(mapPointElement);
      callout.style.display ="block";
 

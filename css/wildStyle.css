@@ -73,7 +73,7 @@ padding-top:128px;
 padding-left:12px;
 }
 
-#callout{
+.callout{
 	background-image:url("../resources/orangeOVerlay.png");
 	width:151px;
 	height:153px;
@@ -82,13 +82,13 @@ padding-left:12px;
 	display:none;
 }
 
-#calloutThumbnail{
+.calloutThumbnail{
 	margin-top:43px;
 	margin-left:10px;
 	border:1px solid #781214;
 }
 
-#calloutCloseButton{
+.calloutCloseButton{
 	float:left;
 	margin-top:133px;
 	margin-left:15px;
