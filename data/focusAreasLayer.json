@@ -4,12 +4,9 @@
         {"type":"Feature", "id":"OpenLayers.Feature.Vector_189", "properties":{}, "geometry":{"type":"Polygon", "coordinates":[[[-83.038445, 42.354865], [-83.057413, 42.347317], [-83.053293, 42.340973], [-83.030849, 42.350584] ]]}, "crs":{"type":"OGC", "properties":{"urn":"urn:ogc:def:crs:OGC:1.3:CRS84"}}},
 				
 				{"type":"Feature", "id":"OpenLayers.Feature.Vector_188", "properties":{}, "geometry":{"type":"Polygon", "coordinates":[[[-83.10565, 42.417754], [-83.122902, 42.417501], [-83.131313, 42.431693], [-83.115263, 42.431819] ]]}, "crs":{"type":"OGC", "properties":{"urn":"urn:ogc:def:crs:OGC:1.3:CRS84"}}},
-
 				        {"type":"Feature", "id":"OpenLayers.Feature.Vector_187", "properties":{}, "geometry":{"type":"Polygon", "coordinates":[[[-82.953644, 42.347888], [-82.959995, 42.340021], [-82.988663, 42.333296], [-83.004456, 42.333169], [-82.996559, 42.339894], [-82.994156, 42.339514], [-82.979565, 42.343574], [-82.970467, 42.35144] ]]}, "crs":{"type":"OGC", "properties":{"urn":"urn:ogc:def:crs:OGC:1.3:CRS84"}}},
-
 								{"type":"Feature", "id":"OpenLayers.Feature.Vector_185", "properties":{}, "geometry":{"type":"Polygon", "coordinates":[[[-82.953644, 42.347888], [-82.959995, 42.340021], [-82.988663, 42.333296], [-83.004456, 42.333169], [-82.996559, 42.339894], [-82.994156, 42.339514], [-82.979565, 42.343574], [-82.970467, 42.35144] ]]}, "crs":{"type":"OGC", "properties":{"urn":"urn:ogc:def:crs:OGC:1.3:CRS84"}}},
-
-							{"type":"Feature", "id":"OpenLayers.Feature.Vector_186", "properties":{}, "geometry":{"type":"Polygon", "coordinates":[[[-83.077283, 42.350171], [-83.072648, 42.351345], [-83.068614, 42.343289], [-83.072605, 42.342115], [-83.090029, 42.349156], [-83.087111, 42.353343], [-83.080759, 42.355531] ]]}, "crs":{"type":"OGC", "properties":{"urn":"urn:ogc:def:crs:OGC:1.3:CRS84"}}},
+							{"type":"Feature", "id":"OpenLayers.Feature.Vector_186", "properties":{}, "geometry":{"type":"Polygon", "coordinates":[[[-83.077283, 42.350171], [-83.072648, 42.351345], [-83.068614, 42.343289], [-83.072605, 42.342115], [-83.090029, 42.349156], [-83.087111, 42.353343], [-83.080759, 42.355531] ]]}, "crs":{"type":"OGC", "properties":{"urn":"urn:ogc:def:crs:OGC:1.3:CRS84"}}}
 	
 		
 		]

@@ -102,6 +102,7 @@ rhus.map = new Class({
   icon : null,
   markers : null,
   timer : null,
+	milkbox : null,
 
   initialize: function(contentProvider){
   
@@ -269,26 +270,26 @@ rhus.map = new Class({
       })
     });
 
-    var studyAreaGeometry = new OpenLayers.Protocol.HTTP({
-      url: "data/studyAreaLayer.json",
-      format: new OpenLayers.Format.GeoJSON(
-        {
-          ignoreExtraDims: true
-        }
-      )
-    });
+ //   var studyAreaGeometry = new OpenLayers.Protocol.HTTP({
+   //   url: "data/studyAreaLayer.json",
+   //   format: new OpenLayers.Format.GeoJSON(
+   //     {
+   //       ignoreExtraDims: true
+   //     }
+   //   )
+ //   });
 
 //TODO: Don't reproject in javascript, just reproject the file using proj4, or something else
-    var statePlaneProjection = new OpenLayers.Projection("EPSG:4269");
+ //   var statePlaneProjection = new OpenLayers.Projection("EPSG:4269");
    // statePlaneProjection = new OpenLayers.Projection("EPSG:4326");
-    var studyArea = new OpenLayers.Layer.Vector("Study Area Overlay", {
-      strategies: [new OpenLayers.Strategy.Fixed()],                
-      projection: statePlaneProjection,
-      protocol: ,
-      styleMap: styles
-    });
+ //   var studyArea = new OpenLayers.Layer.Vector("Study Area Overlay", {
+ //     strategies: [new OpenLayers.Strategy.Fixed()],                
+ //     projection: statePlaneProjection,
+ //     protocol: ,
+ //     styleMap: styles
+ //   });
 
-    this.map.addLayer(studyArea);
+ //   this.map.addLayer(studyArea);
 
 
 
@@ -415,8 +416,16 @@ rhus.map = new Class({
     //Initialize here differet markers the map may need
     console.log("Initialized");
     
-    $('callout').getElementById('calloutCloseButton').addEvent('click', function(event){
-      console.log("Closing Callout");
+		console.log($('callout'));
+
+		that = this;
+
+		$('callout').getElementById('calloutCloseButton').addEvent('click', function(event){
+				if (that.milkbox != null){
+					console.log("destroying the milkbox");
+					that.milkbox.display.destroy();
+				}			
+			console.log("Closing Callout");
       console.log(event.target);
       event.stop();
       $('callout').style.display = "none";
@@ -461,23 +470,30 @@ rhus.map = new Class({
     }
   },
 
-  showCallout: function(mapPointElement, lonlat, id){
-     callout = $('callout');//.clone(true);
-     //callout.id = 'callout';
-     console.log(callout);
+  showCallout: function(marker, lonlat, id){
+     callout = $('callout');
+		 callout.style.top = marker.style.top;
+		 callout.style.left = marker.style.left;
      calloutThumbnail = callout.getElements('.calloutThumbnail')[0];
      calloutThumbnail.src = this.provider.getThumbSrc(id);
 
      calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
-     calloutLightboxLink = "couchdb/"+id+"/medium.jpg";
-
+		 //TODO: provider should supply url
+		 calloutLightboxLink.href = "couchdb/" + this.provider.database +"/"+id+"/medium.jpg";
+		 if (this.milkbox != null){
+			 console.log("destroying the milkbox");
+			 this.milkbox.display.destroy();
+		 } 
+		 callout.inject(marker, 'before');
      
-     callout.inject(mapPointElement);
+			 
+		 this.milkbox = new Milkbox({ });
+
      callout.style.display ="block";
 
   },
 
-  hideCallout: function(mapPointElement, lonlat, id){
+  hideCallout: function(marker, lonlat, id){
 
   }
 

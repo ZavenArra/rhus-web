@@ -1,7 +1,7 @@
 
 body{
 	background-color: #000000;
-	background-image: url("../resources/wood2.png");
+	background-image: url("../resources/wood.png");
 	background-repeat: no-repeat;
 	margin-left:auto;
 	margin-right:auto;
@@ -28,6 +28,14 @@ body{
 	float:left;
 }
 
+.header a:hover {
+	background-image:url("../resources/headerHover.png");
+  width:310px;
+	  height:59px;
+		  margin:13px 0px 0px 0px;
+			  display:block;
+
+}
 
 .menuNav{
 	margin-top:13px;
@@ -69,7 +77,7 @@ body{
 
 
 .mapcontainer{
-padding-top:128px;
+padding-top:108px;
 padding-left:12px;
 }
 
@@ -109,6 +117,29 @@ padding-left:12px;
 .logo img{
 	position:absolute;
 	z-index:-555;
+}
+
+.socialMedia{
+width:120px;
+height:43px;
+border-bottom:1px solid #FF7F00;
+  position:absolute;
+	  z-index:1;
+margin-left:180px;
+margin-top:59px;
+}
+
+.socialMedia img{;
+	width:40px;
+	height:40px;
+}
+
+#facebook{
+	margin-left:65px;
+}
+
+#twitter{
+	margin-left:10px;
 }
 
 #involved{

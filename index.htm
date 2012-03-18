@@ -4,16 +4,24 @@
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
-			<title>OpenLayers Basic OSM Example</title>
+			<title>Wildflowers of Detroit</title>
 			<link rel="stylesheet" href="thirdparty/openlayers/theme/default/style.css" type="text/css">
 			<link rel="stylesheet" type="text/css" href="/css/style.css">
 			<link rel="stylesheet" type="text/css" href="/css/wildStyle.css">
 			<link rel="stylesheet" type="text/css" href="/css/google.css">
+			<link rel="stylesheet" type="text/css" href="/css/default.css">
+			<link rel="stylesheet" type="text/css" href="/css/external.css">
+			<link rel="stylesheet" type="text/css" href="/css/main.css">
+			<link rel="stylesheet" type="text/css" href="/css/milkbox/milkbox.css">
 
+
+			
 
 			<script src="thirdparty/openlayers/OpenLayers.js"></script>
 			<script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
-			<script src="thirdparty/js/mootools.js"></script>
+			<script src="js/mootools-core.js"></script>
+			<script src="js/mootools-more.js"></script>
+			<script src="js/milkbox.js"></script>
 			<script src="js/rhus.js"></script>
 
 
@@ -37,7 +45,12 @@
 					</div>
 				</div>
 
-				<div class="logo">
+				<div class="logo"> 
+					<div class="socialMedia">
+						<a href="https://twitter.com/#!/WinterRoot"><img id="twitter"src="/resources/twitter.png"/></a>
+					
+						<a href="http://www.facebook.com/pages/WinterRoot/195344040507883"><img id="facebook" src="/resources/facebook-wood.png"/></a>
+					</div>
 					<img src="../resources/logo.png"/>
 				</div>
 
@@ -46,7 +59,15 @@
 						<a href="linktofacebook"><img src="#"/></a>
 					</div>-->
 
-				<div class="mapcontainer">
+					<div class="mapcontainer">
+						<div id="callout" class="callout">
+
+							<img id="calloutCloseButton" class="calloutCloseButton" src="/resources/close.png" alt="Close Callout"/>
+
+							<a href="" class="calloutLightboxLink" data-milkbox="gall1"> <img class="calloutThumbnail" src=""/></a>
+
+						</div>
+
 					<div id="map" class="smallmap" style="display:block"></div>
 				</div>
 
@@ -54,24 +75,25 @@
 				<div id="getInvolved" class="timeline" style="display:none" ><img id="blank" src="../resources/blank.png"/>
 					<div class="text">
 						<p>
-						            Wildflowers of Detroit is a community project built to raise awareness of the budding ecology in Detroit's many "vacant" lots and to track their growth over time. As the city continues to cycle through new eras, we present the Wildflowers of Detroit project as the plants voice. (a tool to more closely track the needs of plants - resource management?? resource awareness?).<bre/>
+						<p style="color:#65A354;">THREE WAYS TO GET INVOLVED:</p><br/>
+						
+						1) Download the Wild Detroit application on your Android or iPhone and start taking pictures!<br/>
+						<br/>
+						2) Submit a request to add backdated images by emailing <a href="mailto:admin@wildflowersofdetroit.org">WinterRoot</a><br/>
+						<br/>
+						3) Subscribe to our <a href="http://www.twitter.com">twitter</a>, RSS, or <a href="http://www.facebook.com/pages/WinterRoot/195344040507883">Facebook</a> feeds<br/>
+						<br/>
+						<br/>
 
-												            The technological side of this project is composed of mobile apps, geolocation tagging, and a timeline. Each app is a camera, gelocation map, and personal image gallery.  Download and take it into the open fields. Use the apps and the website to upload images, see what other users are finding, and watch the changes in fields over time.<br/>
+						            Wildflowers of Detroit is a community project built to raise awareness of the budding ecology in Detroit's many "vacant" lots and to track their growth over time. As the city continues to cycle through new eras, we present the Wildflowers of Detroit project as the plants voice; a tool to more closely track the needs of specific plants and natural areas.<br/>
 
-																		           <br/>																								
-					Here are three ways you can Get Involved:<br/>
-					<br/>
-					1) Download the Wild Detroit application on your Android(link) or iPhone(link) and start taking pictures!<br/>
-					<br/>
-					2) Submit a request to add backdated images by emailing <a href="mailto:admin@wildflowersofdetroit.org">WinterRoot</a><br/>
-					<br/>
-					3) Subscribe to our <a href="http://www.twitter.com">twitter</a>, RSS, or <a href="http://www.facebook.com">Facebook</a> feeds<br/> 
-					<br/>	
+												            The technological side of this project is composed of mobile apps, geolocation tagging, and a timeline. Each app is a camera, gelocation map, and personal image gallery.  Download and take it into the open fields. Use the apps and the website to upload images, see what other users are finding, and watch changes over time!<br/>
+			
 					<br/>
 					<br/>
-					INTERESTED IN TECHNOLOGY?<br/>
-					<br/>
-					WinterRoot is looking for collaborators on both the Wildflowers of Detroit and Rhus open-source software projects! Check out either of the projects on github(link, link) for more info, or contact <a href="mailto:admin@wildflowersofdetroit.org">WinterRoot</a></p>
+					<p style="color:#65A354;">INTERESTED IN TECHNOLOGY?</p><br/>
+					
+					WinterRoot is looking for collaborators on both the Wildflowers of Detroit and Rhus open-source software projects! Check out the projects on github(<a href="https://github.com/deepwinter/rhus-web">website</a>, <a href="https://github.com/deepwinter/rhus-android">Android</a>, <a href="https://github.com/deepwinter/Wildflowers-of-Detroit-IPhone-App">iPhone</a>) for more info, or contact <a href="mailto:admin@wildflowersofdetroit.org">WinterRoot</a></p>
 				</div>
 				</div>
 				<div id="timeline" class="timeline" style="display:none" ><img src="../resources/timelinePlaceholder.png"/></div>
@@ -80,18 +102,17 @@
 						<p>
 
 
-						This project has been developed by WinterRoot using our open source technology called Rhus. It's primary purpose is to (interest missions statement here), but as an open source project it will be available for all interested collaborators to branch and develop in accordance with their own inspiration! As a part of Rhus, we've chosen to use other open source technologies such as couchDB and Open Layers.(matt clean this up please) +quantum gis<br/>
+						This project has been developed by <a href="http://www.winterroot.net"> WinterRoot</a> using our open source technology called Rhus. It's intended purpose is to provide communities and research groups with software needed to collect a wide range of ecological data, but as an open source project it will be available for all interested collaborators to branch and develop in accordance with their own inspiration! As a part of Rhus, we've chosen to use other open source technologies such as couchDB and Open Layers and CouchDB.<br/>
 
 
 						Want to join in? Check out Wildflowers of Detroit (github link) or Rhus(git hub link). <br/>
 
-
-
-
-
+						<br/>
+						<br/>
+						<br/>
 
 						About WinterRoot:<br/>
-
+						<br/>
 						WinterRoot is Matthew Shultz and Gwendolyn McKay. Both grew up and lived a long time in Southeast Michigan, most recently in the Eastern Market, where they spent a lot of time exploring art, music, technology, and open fields. <br/>
 
 						Matthew is a computer scientist by trade (with a BS from UM) and a ecologist by night. He recently moved from Detroit to Oakland, CA to peruse his interest in wetlands by re-joining the world of academia. He is also studies Chemistry and Permaculture. Matthew can program in objective c, java, javascript, php, ruby, and is the technical lead for Wildflowers of Detroit and Rhus.<br/>
@@ -105,12 +126,6 @@
 
 			</div>
 
-      <div id="callout" class="callout">
-
-				<img id="calloutCloseButton" class="calloutCloseButton" src="/resources/close.png" alt="Close Callout"/>
-        <img class="calloutThumbnail" src=""/>
-        
-      </div>
 
 		</body>
 	</html>
