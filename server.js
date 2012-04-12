@@ -20,8 +20,10 @@ var tileProxy = new httpProxy.HttpProxy({
 
 var proxy = new httpProxy.HttpProxy({
   target: {
-    host: 'data.winterroot.net', 
+    //host: 'winterroot:dieis8835nd@data.winterroot.net', 
+    host: 'localhost', 
     port: 5984
+
   }
 });
  
@@ -30,7 +32,8 @@ http.createServer(function (request, response) {
     console.log('request starting...');
 
     console.log(request.url);
-    if(request.url.indexOf('/couchdb') == 0){
+    if(request.url.indexOf('/couchdb') == 0
+       && request.method == 'GET' ){
       //proxy this request to couchdb
       request.url = request.url.replace('couchdb/','');
       proxy.proxyRequest(request, response);
@@ -80,6 +83,6 @@ http.createServer(function (request, response) {
         }
     });
      
-}).listen(8125);
+}).listen(80);
  
 console.log('Server running at http://127.0.0.1:8125/');
