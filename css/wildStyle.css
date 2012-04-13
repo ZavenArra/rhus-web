@@ -89,7 +89,8 @@ padding-left:12px;
 	background-image:url("../resources/orangeOverlay.png");
 	width:151px;
 	height:153px;
-	margin-left:10px;
+	margin-left:7px;
+  margin-top:16px;
 	position:absolute;
 	display:none;
 }

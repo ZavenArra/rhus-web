@@ -1,0 +1,3 @@
+use authbind
+run as user 'node':
+nohub authbind node server.js &

@@ -38,9 +38,9 @@ rhus.navigation = new Class({
 });
 
 rhus.contentProvider = new Class({
-  database: "squirrels_of_the_earth",
+  database: "wildflowers_of_detroit",
   urlPrefix: "/couchdb/",
-  viewPath: "_design/design/_view/all",
+  viewPath: "_design/design/_view/galleryDocuments",
   update_seq:  -1, //database sequence number
   callerCallback: null,
 
