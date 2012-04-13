@@ -53,7 +53,7 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 }
 
 .active {
-	background-image:url("../resources/menuHover.png");
+	background-image:url("../resources/menuhover.png");
 }
 
 .navItem a{
@@ -70,7 +70,7 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 }
 
 .menuNav a:hover {
-	background-image:url("../resources/menuHover.png");
+	background-image:url("../resources/menuhover.png");
 	width:62px;
 	height:59px;
 	float:left;
@@ -86,7 +86,7 @@ padding-left:12px;
 }
 
 .callout{
-	background-image:url("../resources/orangeOVerlay.png");
+	background-image:url("../resources/orangeOverlay.png");
 	width:151px;
 	height:153px;
 	margin-left:10px;
