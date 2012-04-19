@@ -1146,6 +1146,8 @@ var MilkboxGallery = new Class({
 	},
 	
 	check_extension:function(string){
+    return true; //TODO: Overriding to work with CouchDB show function
+
 		var splitted, regular_file, dyn_url;
 		
 		splitted  = string.split('?')[0];
