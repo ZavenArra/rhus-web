@@ -87,7 +87,8 @@ rhus.contentProvider = new Class({
   },
 
   getThumbSrc : function(id){
-     return 'couchdb/'+this.database+'/_design/design/_show/thumb/'+id;
+    console.log('couchdb/'+this.database+'/_design/design/_show/thumb/'+id);
+    return 'couchdb/'+this.database+'/_design/design/_show/thumb/'+id;
   }
 
 });
@@ -113,7 +114,7 @@ rhus.map = new Class({
     this.osm = new OpenLayers.Layer.OSM( "Open Street Map Layer");
 
     // defined for javascript.
-    if( google ){
+    if(! (typeof google === 'undefined') ){
       var gmap = new OpenLayers.Layer.Google("Google Streets Layer", {visibility: false});
     }
 
@@ -167,11 +168,14 @@ rhus.map = new Class({
     this.map.addLayer(jpl_wms);
     */
 
-    this.gsat = new OpenLayers.Layer.Google(
-      "Google Satellite",
-      {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22}
-      // used to be {type: G_SATELLITE_MAP, numZoomLevels: 22}
-     );
+    if(typeof google !== "undefined") {
+      this.gsat = new OpenLayers.Layer.Google(
+        "Google Satellite",
+        {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22}
+        // used to be {type: G_SATELLITE_MAP, numZoomLevels: 22}
+      );
+      this.map.addLayer(this.gsat);
+    }
 
     //Add Detroit Overlay
     //And also for timelines...
@@ -180,7 +184,6 @@ rhus.map = new Class({
     //
 
     //TODO: All layers should be added in the order that we want to show them
-    this.map.addLayer(this.gsat);
     this.map.addLayer(this.osm);
     this.map.addLayer(gmap);
 
