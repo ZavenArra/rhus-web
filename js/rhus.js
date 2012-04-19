@@ -87,7 +87,7 @@ rhus.contentProvider = new Class({
   },
 
   getThumbSrc : function(id){
-     return 'couchdb/'+this.database+'/'+id+'/thumb.jpg';
+     return 'couchdb/'+this.database+'/_design/design/_show/thumb/'+id;
   }
 
 });
@@ -479,7 +479,7 @@ rhus.map = new Class({
 
      calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
 		 //TODO: provider should supply url
-		 calloutLightboxLink.href = "couchdb/" + this.provider.database +"/"+id+"/medium.jpg";
+		 calloutLightboxLink.href = "couchdb/" + this.provider.database +"/_design/design/_show/medium/"+id;
 		 if (this.milkbox != null){
 			 console.log("destroying the milkbox");
 			 this.milkbox.display.destroy();
