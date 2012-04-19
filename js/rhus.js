@@ -381,7 +381,7 @@ rhus.map = new Class({
     });
 
 
-    var focusAreas = new OpenLayers.Layer.Vector("Focus Area Overlay", {
+    var focusAreas = new OpenLayers.Layer.Vector("Timeline Zones", {
       strategies: [new OpenLayers.Strategy.Fixed()],                
       protocol: new OpenLayers.Protocol.HTTP({
         url: "data/focusAreasLayer.json",
