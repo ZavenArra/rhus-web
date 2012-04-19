@@ -5,7 +5,6 @@ rhus.navigation = new Class({
   activePage: 'map',
   pages:      ['map', 'getInvolved', 'timeline', 'about'],
 
-
   initialize: function(){
     document.id('mapButton').addEvent('click', this.menuCallback('map').bind(this));
     document.id('getInvolvedButton').addEvent('click', this.menuCallback('getInvolved').bind(this));
@@ -38,9 +37,10 @@ rhus.navigation = new Class({
 });
 
 rhus.contentProvider = new Class({
-  database: "wildflowers_of_detroit",
+  database: "squirrels_of_the_earth",
   urlPrefix: "/couchdb/",
-  viewPath: "_design/design/_view/galleryDocuments",
+  galleryDocumentsViewPath: "_design/design/_view/galleryDocuments",
+  zonesViewPath : "_design/design/_view/zones",
   update_seq:  -1, //database sequence number
   callerCallback: null,
 
@@ -52,36 +52,52 @@ rhus.contentProvider = new Class({
 
   mapPoints : function(callback){
 
-    url = this.urlPrefix + this.database + '/' + this.viewPath + "?update_seq=true&startKey="+this.startKey;
+    url = this.urlPrefix + this.database + '/' + this.galleryDocumentsViewPath + "?update_seq=true&startKey="+this.startKey;
     console.log("CouchDB: "+url);
 
     this.callerCallback = callback;
-    this.requery();
+    this.requeryMapPoints();
 
     //Set Timeout to update the map
-    this.timer = this.requery.bind(this).periodical(8000);
+    this.timer = this.requeryMapPoints.bind(this).periodical(20000);
+  },
+
+  zones : function(callback){
+    zonesUrl = this.urlPrefix + this.database + '/' + this.zonesViewPath; 
+
+    var myJSONRemote = new Request.JSON({
+      url: zonesUrl,
+      method: 'get', 
+      onComplete: this.requestCallback(callback).bind(this) }).send();  
+
   },
 
 
   requestCallback : function(callerCallback){
     return function(responseJSON){
+      return callerCallback(responseJSON);
+    }
+  },
+
+  requestCallbackWithUpdateSeq : function(callerCallback){
+    return function(responseJSON){
       if(responseJSON.update_seq > this.update_seq){
         console.log("Got New Data");
         this.update_seq = responseJSON.update_seq;
-        return this.callerCallback(responseJSON);
+        return callerCallback(responseJSON);
       }
      // return callback(callerCallback, responseJSON);
     }
   },
 
-  requery : function(){
+  requeryMapPoints : function(){
 
     console.log("Requery");
 
     var myJSONRemote = new Request.JSON({
       url: url,
       method: 'get', 
-    onComplete: this.requestCallback(this.callerCallback).bind(this) }).send();  
+    onComplete: this.requestCallbackWithUpdateSeq(this.callerCallback).bind(this) }).send();  
 
 
   },
@@ -117,56 +133,6 @@ rhus.map = new Class({
       var gmap = new OpenLayers.Layer.Google("Google Streets Layer", {visibility: false});
     }
 
-    //Add Other Layers
-    //topo = new OpenLayers.Layer.OSM( "OSM Map Layer");
-    //this.map.addLayer(topo);
-    //
-    
-    //Topo
-    /*
-    var drg = new OpenLayers.Layer.WMS("Topo Maps",
-      "http://terraservice.net/ogcmap.ashx",
-    {layers: "DRG"});
-    this.map.addLayer(drg);
-    */
-
-    //Shaded Relief
-    /*
-    shade = new OpenLayers.Layer.WMS("Shaded Relief",
-      "http://ims.cr.usgs.gov:80/servlet19/com.esri.wms.Esrimap/USGS_EDC_Elev_NED_3", 
-    {layers: "HR-NED.IMAGE", reaspect: "false", transparent: 'true'},
-    {
-      opacity: 0.5,
-      singleTile: true
-    }
-    );
-    this.map.addLayer(shade);
-*/
-    
-    
-    /*
-    var nasa = new OpenLayers.Layer.WMS("NASA Global Mosaic",
-      "http://wms.jpl.nasa.gov/wms.cgi",
-    {layers: "modis,global_mosaic"});
-
-    var nasa = new OpenLayers.Layer.WMS("NASA Global Mosaic",
-      "http://wms.jpl.nasa.gov/wms.cgi",
-      {
-        layers: "modis,global_mosaic",
-        transparent: true
-      }, {
-        opacity: 0.5,
-        singleTile: true
-      });
-    */
-
-/*
-    var jpl_wms = new OpenLayers.Layer.WMS( "NASA Global Mosaic",
-      "http://wms.jpl.nasa.gov/wms.cgi", 
-    {layers: "global_mosaic"});
-    this.map.addLayer(jpl_wms);
-    */
-
     this.gsat = new OpenLayers.Layer.Google(
       "Google Satellite",
       {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22}
@@ -184,7 +150,164 @@ rhus.map = new Class({
     this.map.addLayer(this.osm);
     this.map.addLayer(gmap);
 
-    var styles = new OpenLayers.StyleMap({
+    var styles = rhus.mapStyles.getStudyAreaStyles(); 
+   
+ //   var studyAreaGeometry = new OpenLayers.Protocol.HTTP({
+   //   url: "data/studyAreaLayer.json",
+   //   format: new OpenLayers.Format.GeoJSON(
+   //     {
+   //       ignoreExtraDims: true
+   //     }
+   //   )
+ //   });
+
+//TODO: Don't reproject in javascript, just reproject the file using proj4, or something else
+ //   var statePlaneProjection = new OpenLayers.Projection("EPSG:4269");
+   // statePlaneProjection = new OpenLayers.Projection("EPSG:4326");
+ //   var studyArea = new OpenLayers.Layer.Vector("Study Area Overlay", {
+ //     strategies: [new OpenLayers.Strategy.Fixed()],                
+ //     projection: statePlaneProjection,
+ //     protocol: ,
+ //     styleMap: styles
+ //   });
+
+ //   this.map.addLayer(studyArea);
+
+   this.map.setCenter(
+      new OpenLayers.LonLat(-83.104019, 42.369959).transform(
+        new OpenLayers.Projection("EPSG:4326"),
+        this.map.getProjectionObject()
+      ), 12
+    );    
+    this.markers = new OpenLayers.Layer.Markers( "Plants" );
+    this.map.addLayer(this.markers);
+
+    //map icons
+    var size = new OpenLayers.Size(11,10);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    this.icon = new OpenLayers.Icon('resources/mapPoint.png', size, offset);
+
+    this.map.addControl(new OpenLayers.Control.LayerSwitcher());
+
+    //Initialize here differet markers the map may need
+    console.log("Initialized");
+    
+		console.log($('callout'));
+
+		that = this;
+
+		$('callout').getElementById('calloutCloseButton').addEvent('click', function(event){
+				if (that.milkbox != null){
+					console.log("destroying the milkbox");
+					that.milkbox.display.destroy();
+				}			
+			console.log("Closing Callout");
+      console.log(event.target);
+      event.stop();
+      $('callout').style.display = "none";
+    });
+
+  },
+
+
+  addMarkers: function(){
+    console.log("Called addMarkers");
+    callback = this.getMapDataRequestCallback(this);
+    this.provider.mapPoints(callback);
+  },
+
+  addZones: function(){
+    callback = this.getRegionsRequestCallback(this);
+    this.provider.zones(callback);
+  },
+
+
+  getMapDataRequestCallback: function(receiver){
+
+    return function(responseJSON){
+
+      callout = $('callout');
+      callout.inject($('body'));
+
+      receiver.markers.clearMarkers();
+
+      console.log("adding new markers");
+      responseJSON.rows.each(function(row){
+        longitude = row.value.longitude;
+        latitude = row.value.latitude;
+        lonlat = new OpenLayers.LonLat(longitude, latitude).transform(
+          new OpenLayers.Projection("EPSG:4326"),
+          receiver.map.getProjectionObject());
+
+        marker = new OpenLayers.Marker(lonlat,receiver.icon.clone());
+        marker.events.register('mousedown', marker, function(evt) { receiver.showCallout(evt.element, lonlat, row.value.id); OpenLayers.Event.stop(evt); });
+        receiver.markers.addMarker(marker);
+      });
+    }
+  },
+
+  getRegionsRequestCallback: function(receiver){
+    return function(responseJSON){
+
+      //receiver.markers.clearRegions();
+      var zoneStyles = rhus.mapStyles.getTimelineStyles();
+      var parser = new OpenLayers.Format.GeoJSON();
+      console.log(responseJSON);
+      responseJSON.rows.each(function(zone){
+        //Focus Areas
+        var zoneLayer = new OpenLayers.Layer.Vector(zone.value.name,
+          {
+            styleMap: zoneStyles
+          }
+        );
+        console.log(zone.value.name);
+
+        var zoneGeometry = parser.read(zone.value.geometry, 'Geometry')
+
+        var feature = new OpenLayers.Feature.Vector( zoneGeometry );
+        zoneLayer.addFeatures(feature);
+
+
+        receiver.map.addLayer(zoneLayer);
+    
+      });
+    }
+  },
+
+  showCallout: function(marker, lonlat, id){
+     callout = $('callout');
+		 callout.style.top = marker.style.top;
+		 callout.style.left = marker.style.left;
+     calloutThumbnail = callout.getElements('.calloutThumbnail')[0];
+     calloutThumbnail.src = this.provider.getThumbSrc(id);
+
+     calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
+		 //TODO: provider should supply url
+		 calloutLightboxLink.href = "couchdb/" + this.provider.database +"/"+id+"/medium.jpg";
+		 if (this.milkbox != null){
+			 console.log("destroying the milkbox");
+			 this.milkbox.display.destroy();
+		 } 
+		 callout.inject(marker, 'before');
+     
+			 
+		 this.milkbox = new Milkbox({ });
+
+     callout.style.display ="block";
+
+  },
+
+  hideCallout: function(marker, lonlat, id){
+
+  }
+
+});
+
+
+rhus.mapStyles = new Class();
+rhus.mapStyles.getStudyAreaStyles = function(){
+ 
+    styles = new OpenLayers.StyleMap({
       "default": new OpenLayers.Style(null, {
         rules: [
           new OpenLayers.Rule({
@@ -270,31 +393,13 @@ rhus.map = new Class({
       })
     });
 
- //   var studyAreaGeometry = new OpenLayers.Protocol.HTTP({
-   //   url: "data/studyAreaLayer.json",
-   //   format: new OpenLayers.Format.GeoJSON(
-   //     {
-   //       ignoreExtraDims: true
-   //     }
-   //   )
- //   });
+    return styles;
 
-//TODO: Don't reproject in javascript, just reproject the file using proj4, or something else
- //   var statePlaneProjection = new OpenLayers.Projection("EPSG:4269");
-   // statePlaneProjection = new OpenLayers.Projection("EPSG:4326");
- //   var studyArea = new OpenLayers.Layer.Vector("Study Area Overlay", {
- //     strategies: [new OpenLayers.Strategy.Fixed()],                
- //     projection: statePlaneProjection,
- //     protocol: ,
- //     styleMap: styles
- //   });
+  }
 
- //   this.map.addLayer(studyArea);
+rhus.mapStyles.getTimelineStyles = function(){
 
-
-
-    //Focus Areas
-    var focusAreasStyles = new OpenLayers.StyleMap({
+    styles = new OpenLayers.StyleMap({
       "default": new OpenLayers.Style(null, {
         rules: [
           new OpenLayers.Rule({
@@ -380,127 +485,11 @@ rhus.map = new Class({
       })
     });
 
-
-    var focusAreas = new OpenLayers.Layer.Vector("Focus Area Overlay", {
-      strategies: [new OpenLayers.Strategy.Fixed()],                
-      protocol: new OpenLayers.Protocol.HTTP({
-        url: "data/focusAreasLayer.json",
-        format: new OpenLayers.Format.GeoJSON()
-      }),
-      styleMap: focusAreasStyles
-    });
-
-    this.map.addLayer(focusAreas);
-
-
-
-
-
-
-    this.map.setCenter(
-      new OpenLayers.LonLat(-83.104019, 42.369959).transform(
-        new OpenLayers.Projection("EPSG:4326"),
-        this.map.getProjectionObject()
-      ), 12
-    );    
-    this.markers = new OpenLayers.Layer.Markers( "Plants" );
-    this.map.addLayer(this.markers);
-
-    //map icons
-    var size = new OpenLayers.Size(11,10);
-    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-    this.icon = new OpenLayers.Icon('resources/mapPoint.png', size, offset);
-
-    this.map.addControl(new OpenLayers.Control.LayerSwitcher());
-
-    //Initialize here differet markers the map may need
-    console.log("Initialized");
-    
-		console.log($('callout'));
-
-		that = this;
-
-		$('callout').getElementById('calloutCloseButton').addEvent('click', function(event){
-				if (that.milkbox != null){
-					console.log("destroying the milkbox");
-					that.milkbox.display.destroy();
-				}			
-			console.log("Closing Callout");
-      console.log(event.target);
-      event.stop();
-      $('callout').style.display = "none";
-    });
-
-
-
-  },
-
-
-  addMarkers: function(){
-    console.log("Called addMarkers");
-    callback = this.getMapDataRequestCallback(this);
-    this.provider.mapPoints(callback);
-  },
-
-
-  getMapDataRequestCallback: function(receiver){
-
-    return function(responseJSON){
-      //console.log("mapDataRequestCallback");
-      //console.log(responseJSON);
-      //
-
-      callout = $('callout');
-      callout.inject($('body'));
-
-      receiver.markers.clearMarkers();
-
-      console.log("adding new markers");
-      responseJSON.rows.each(function(row){
-        longitude = row.value.longitude;
-        latitude = row.value.latitude;
-        lonlat = new OpenLayers.LonLat(longitude, latitude).transform(
-          new OpenLayers.Projection("EPSG:4326"),
-          receiver.map.getProjectionObject());
-
-        marker = new OpenLayers.Marker(lonlat,receiver.icon.clone());
-        marker.events.register('mousedown', marker, function(evt) { receiver.showCallout(evt.element, lonlat, row.value.id); OpenLayers.Event.stop(evt); });
-        receiver.markers.addMarker(marker);
-      });
-    }
-  },
-
-  showCallout: function(marker, lonlat, id){
-     callout = $('callout');
-		 callout.style.top = marker.style.top;
-		 callout.style.left = marker.style.left;
-     calloutThumbnail = callout.getElements('.calloutThumbnail')[0];
-     calloutThumbnail.src = this.provider.getThumbSrc(id);
-
-     calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
-		 //TODO: provider should supply url
-		 calloutLightboxLink.href = "couchdb/" + this.provider.database +"/"+id+"/medium.jpg";
-		 if (this.milkbox != null){
-			 console.log("destroying the milkbox");
-			 this.milkbox.display.destroy();
-		 } 
-		 callout.inject(marker, 'before');
-     
-			 
-		 this.milkbox = new Milkbox({ });
-
-     callout.style.display ="block";
-
-  },
-
-  hideCallout: function(marker, lonlat, id){
+    return styles;
 
   }
 
 
-
-
-});
 
 var rhNavigation;
 var rhMap;
@@ -509,5 +498,6 @@ window.addEvent( "domready", function(){
   rhNavigation = new rhus.navigation();
   rhMap = new rhus.map( new rhus.contentProvider() );
   //set bounds?
-  rhMap.addMarkers();
+  //rhMap.addMarkers();
+  rhMap.addZones();
 });
