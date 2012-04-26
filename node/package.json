@@ -1,0 +1,13 @@
+{
+  "name": "rhus-web",
+    "description": "The Rhus web server",
+    "author": "Matthew Shultz <deepwinter@winterroot.net>",
+    "version": "0.0.1",
+    "dependencies": {
+      "http-proxy": "0.8.0",
+      "cgi" : "0.0.8"
+    },
+    "devDependencies": {
+    },
+    "engine": "node >= 0.4.1"
+}
