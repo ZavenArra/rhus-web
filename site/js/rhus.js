@@ -38,9 +38,7 @@ rhus.navigation = new Class({
 });
 
 rhus.contentProvider = new Class({
-  database: "wildflowers_of_detroit",
-  urlPrefix: "/couchdb/",
-  viewPath: "_design/design/_view/galleryDocuments",
+  viewPath: "_view/galleryDocuments",
   update_seq:  -1, //database sequence number
   callerCallback: null,
 
@@ -52,7 +50,7 @@ rhus.contentProvider = new Class({
 
   mapPoints : function(callback){
 
-    url = this.urlPrefix + this.database + '/' + this.viewPath + "?update_seq=true&startKey="+this.startKey;
+    url = rhusConfiguration.urlPrefix + this.viewPath + "?update_seq=true&startKey="+this.startKey;
     console.log("CouchDB: "+url);
 
     this.callerCallback = callback;
@@ -87,8 +85,8 @@ rhus.contentProvider = new Class({
   },
 
   getThumbSrc : function(id){
-    console.log('couchdb/'+this.database+'/_design/design/_show/thumb/'+id);
-    return 'couchdb/'+this.database+'/_design/design/_show/thumb/'+id;
+    console.log(rhusConfiguration.urlPrefix + '_show/thumb/'+id);
+    return rhusConfiguration.urlPrefix + '_show/thumb/'+id;
   }
 
 });
