@@ -59,7 +59,7 @@ rhus.contentProvider = new Class({
     this.requery();
 
     //Set Timeout to update the map
-    this.timer = this.requery.bind(this).periodical(8000);
+    this.timer = this.requery.bind(this).periodical(rhusConfiguration.refreshRate);
   },
 
 
