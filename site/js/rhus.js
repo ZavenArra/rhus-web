@@ -53,7 +53,9 @@ rhus.contentProvider = new Class({
     url = rhusConfiguration.urlPrefix + this.viewPath + "?update_seq=true&startKey="+this.startKey;
     console.log("CouchDB: "+url);
 
+    console.log(callback);
     this.callerCallback = callback;
+    console.log(this.callerCallback);
     this.requery();
 
     //Set Timeout to update the map
@@ -63,7 +65,9 @@ rhus.contentProvider = new Class({
 
   requestCallback : function(callerCallback){
     return function(responseJSON){
-      if(responseJSON.update_seq > this.update_seq){
+      console.log('callback triggered'+this.update_seq);
+
+      if(this.update_seq || (responseJSON.update_seq > this.update_seq)){
         console.log("Got New Data");
         this.update_seq = responseJSON.update_seq;
         return this.callerCallback(responseJSON);
@@ -76,9 +80,15 @@ rhus.contentProvider = new Class({
 
     console.log("Requery");
 
+    console.log(this.callerCallback);
+
     var myJSONRemote = new Request.JSON({
       url: url,
       method: 'get', 
+      data: {
+        json: 'yes'
+      },
+  //  onComplete: this.requestCallback(this.callerCallback).bind(this) }).send();  
     onComplete: this.requestCallback(this.callerCallback).bind(this) }).send();  
 
 
@@ -447,12 +457,8 @@ rhus.map = new Class({
   getMapDataRequestCallback: function(receiver){
 
     return function(responseJSON){
-      //console.log("mapDataRequestCallback");
-      //console.log(responseJSON);
-      //
-
-      callout = $('callout');
-      callout.inject($('body'));
+      //  callout = $('callout');
+      // callout.inject($('body'));
 
       receiver.markers.clearMarkers();
 
@@ -480,7 +486,7 @@ rhus.map = new Class({
 
      calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
 		 //TODO: provider should supply url
-		 calloutLightboxLink.href = "couchdb/" + this.provider.database +"/_design/design/_show/medium/"+id;
+		 calloutLightboxLink.href = rhusConfiguration.urlPrefix + "_show/medium/"+id;
 		 if (this.milkbox != null){
 			 console.log("destroying the milkbox");
 			 this.milkbox.display.destroy();
