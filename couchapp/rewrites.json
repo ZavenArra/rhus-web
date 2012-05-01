@@ -20,8 +20,16 @@
     "to" : "_view/*"
   },
   {
+   "from" : "_show/*",
+    "to" : "_show/*"
+  },
+  {
    "from" : "data/*",
     "to" : "data/*"
+  },
+  {
+    "from" : "styles/*",
+    "to" : "styles/*"
   },
   {
     "from" : "js/*",
