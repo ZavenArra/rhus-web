@@ -20,7 +20,6 @@ var tileProxy = new httpProxy.HttpProxy({
 
 var proxy = new httpProxy.HttpProxy({
   target: {
-    //host: 'winterroot:dieis8835nd@data.winterroot.net', 
     host: 'localhost', 
     port: 5984
 
@@ -85,4 +84,4 @@ http.createServer(function (request, response) {
      
 }).listen(8080);
  
-console.log('Server running at http://127.0.0.1:8125/');
+console.log('Server running at http://127.0.0.1:80/');
