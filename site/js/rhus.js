@@ -124,6 +124,7 @@ rhus.map = new Class({
   markers : null,
   timer : null,
 	milkbox : null,
+  ctrlSelectFeatures : null,
 
   initialize: function(contentProvider){
   
@@ -195,6 +196,7 @@ rhus.map = new Class({
     this.icon = new OpenLayers.Icon('resources/mapPoint.png', size, offset);
 
     this.map.addControl(new OpenLayers.Control.LayerSwitcher());
+    this.map.addControl(new OpenLayers.Control.MousePosition());
 
     //Initialize here differet markers the map may need
     console.log("Initialized");
@@ -263,29 +265,50 @@ rhus.map = new Class({
         'externalProjection': new OpenLayers.Projection("EPSG:4326")
       });
       console.log(responseJSON);
-      responseJSON.rows.each(function(zone){
-        //Focus Areas
-        var zoneLayer = new OpenLayers.Layer.Vector(zone.value.name,
-          {
-            styleMap: zoneStyles
-          }
-        );
-        console.log(zone.value.name);
 
-        console.log(zone.value.polygon);
-        var zoneGeometry = geoJSONFormat.read(zone.value.polygon);
+      //Timeline Areas
+      var zoneLayer = new OpenLayers.Layer.Vector('Timeline Zones',
+        {
+          styleMap: zoneStyles
+        }
+      );
+
+      var features = new Array();
+      responseJSON.rows.each(function(zone){
+       console.log(zone.value.name);
+
+        console.log(zone.value.geometry);
+        var zoneGeometry = geoJSONFormat.read(zone.value.geometry);
         console.log(zoneGeometry);
 
-       // var zoneFeature = geoJSONFormat.parseFeature(zoneGeometry);
+        // var zoneFeature = geoJSONFormat.parseFeature(zoneGeometry);
         // var feature = new OpenLayers.Feature.Vector( zoneGeometry );
         // var feature = geoJsonFormatter.parseFeature(zoneGeometry);
-        //console.log(zoneFeature);
-        zoneLayer.addFeatures(zoneGeometry);
-
-
-        receiver.map.addLayer(zoneLayer);
+        // console.log(zoneFeature);
+        // zoneLayer.addFeatures(zoneGeometry);
+        features.push(zoneGeometry[0]);
     
       });
+      console.log(features);
+
+      zoneLayer.addFeatures(features);
+
+      receiver.map.addLayer(zoneLayer);
+
+      /*
+      receiver.ctrlSelectFeatures = new OpenLayers.Control.SelectFeature(
+      zoneLayer,
+      {
+      clickout: true, toggle: false,
+      multiple: false, hover: false,
+      toggleKey: "ctrlKey", // ctrl key removes from selection
+      multipleKey: "shiftKey" // shift key adds to selection
+      }
+      );
+      */
+      //This control blocks access to the point markers! Undesireable
+      //receiver.map.addControl(receiver.ctrlSelectFeatures);
+      //receiver.ctrlSelectFeatures.activate();
     }
   },
 
@@ -500,6 +523,8 @@ rhus.mapStyles.getTimelineStyles = function(){
       })
     });
 
+    styles.addUniqueValueRules("default", "visibility", {'visible':{strokeColor: "#ff0000", strokeWidth: 3}});
+
     return styles;
 }
 
@@ -509,7 +534,8 @@ window.addEvent( "domready", function(){
   console.log('Dom is Ready');
   rhNavigation = new rhus.navigation();
   rhMap = new rhus.map( new rhus.contentProvider() );
-  //set bounds?
+  //Markers can't be clicked when zone layer is selected
+  //http://lists.osgeo.org/pipermail/openlayers-users/2007-April/001475.html
   rhMap.addMarkers();
   rhMap.addZones();
 });

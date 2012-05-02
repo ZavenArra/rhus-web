@@ -20,6 +20,10 @@
     "to" : "_view/*"
   },
   {
+   "from" : "_spatial/*",
+    "to" : "_spatial/*"
+  },
+  {
    "from" : "_show/*",
     "to" : "_show/*"
   },
