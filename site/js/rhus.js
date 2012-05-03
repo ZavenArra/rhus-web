@@ -72,6 +72,8 @@ rhus.contentProvider = new Class({
 
   },
 
+  //map.raiseLayer(layer, 1) for up, or map.raiseLayer(layer, -1) for down.
+
 
   requestCallback : function(callerCallback){
     return function(responseJSON){
@@ -122,6 +124,7 @@ rhus.map = new Class({
   provider : null,
   icon : null,
   markers : null,
+  zoneLayer : null,
   timer : null,
 	milkbox : null,
   ctrlSelectFeatures : null,
@@ -159,27 +162,36 @@ rhus.map = new Class({
     this.map.addLayer(gmap);
 
     var styles = rhus.mapStyles.getStudyAreaStyles(); 
-   
- //   var studyAreaGeometry = new OpenLayers.Protocol.HTTP({
-   //   url: "data/studyAreaLayer.json",
-   //   format: new OpenLayers.Format.GeoJSON(
-   //     {
-   //       ignoreExtraDims: true
-   //     }
-   //   )
- //   });
 
-//TODO: Don't reproject in javascript, just reproject the file using proj4, or something else
- //   var statePlaneProjection = new OpenLayers.Projection("EPSG:4269");
-   // statePlaneProjection = new OpenLayers.Projection("EPSG:4326");
- //   var studyArea = new OpenLayers.Layer.Vector("Study Area Overlay", {
- //     strategies: [new OpenLayers.Strategy.Fixed()],                
- //     projection: statePlaneProjection,
- //     protocol: ,
- //     styleMap: styles
- //   });
+    //   var studyAreaGeometry = new OpenLayers.Protocol.HTTP({
+      //   url: "data/studyAreaLayer.json",
+      //   format: new OpenLayers.Format.GeoJSON(
+        //     {
+          //       ignoreExtraDims: true
+          //     }
+          //   )
+          //   });
 
- //   this.map.addLayer(studyArea);
+        //TODO: Don't reproject in javascript, just reproject the file using proj4, or something else
+          //   var statePlaneProjection = new OpenLayers.Projection("EPSG:4269");
+        // statePlaneProjection = new OpenLayers.Projection("EPSG:4326");
+        //   var studyArea = new OpenLayers.Layer.Vector("Study Area Overlay", {
+          //     strategies: [new OpenLayers.Strategy.Fixed()],                
+          //     projection: statePlaneProjection,
+          //     protocol: ,
+          //     styleMap: styles
+//   });
+
+          //   this.map.addLayer(studyArea);
+
+    //Timeline Areas
+    var zoneStyles = rhus.mapStyles.getTimelineStyles();
+    this.zoneLayer = new OpenLayers.Layer.Vector('Timeline Zones',
+      {
+           styleMap: zoneStyles
+       }
+     );
+   this.map.addLayer(this.zoneLayer);
 
    this.map.setCenter(
       new OpenLayers.LonLat(-83.104019, 42.369959).transform(
@@ -200,8 +212,6 @@ rhus.map = new Class({
 
     //Initialize here differet markers the map may need
     console.log("Initialized");
-    
-		console.log($('callout'));
 
 		that = this;
 
@@ -259,19 +269,11 @@ rhus.map = new Class({
     return function(responseJSON){
 
       //receiver.markers.clearRegions();
-      var zoneStyles = rhus.mapStyles.getTimelineStyles();
       var geoJSONFormat = new OpenLayers.Format.GeoJSON({
         'internalProjection' : receiver.map.getProjectionObject(),
         'externalProjection': new OpenLayers.Projection("EPSG:4326")
       });
       console.log(responseJSON);
-
-      //Timeline Areas
-      var zoneLayer = new OpenLayers.Layer.Vector('Timeline Zones',
-        {
-          styleMap: zoneStyles
-        }
-      );
 
       var features = new Array();
       responseJSON.rows.each(function(zone){
@@ -291,24 +293,21 @@ rhus.map = new Class({
       });
       console.log(features);
 
-      zoneLayer.addFeatures(features);
+      receiver.zoneLayer.addFeatures(features);
 
-      receiver.map.addLayer(zoneLayer);
 
-      /*
       receiver.ctrlSelectFeatures = new OpenLayers.Control.SelectFeature(
-      zoneLayer,
-      {
-      clickout: true, toggle: false,
-      multiple: false, hover: false,
-      toggleKey: "ctrlKey", // ctrl key removes from selection
-      multipleKey: "shiftKey" // shift key adds to selection
-      }
+        receiver.zoneLayer,
+        {
+          clickout: true, toggle: false,
+          multiple: false, hover: false,
+          toggleKey: "ctrlKey", // ctrl key removes from selection
+          multipleKey: "shiftKey", // shift key adds to selection
+          onSelect:  function(){ //show feature callout }
+        }
       );
-      */
-      //This control blocks access to the point markers! Undesireable
-      //receiver.map.addControl(receiver.ctrlSelectFeatures);
-      //receiver.ctrlSelectFeatures.activate();
+      receiver.map.addControl(receiver.ctrlSelectFeatures);
+      receiver.ctrlSelectFeatures.activate();
     }
   },
 
@@ -536,6 +535,6 @@ window.addEvent( "domready", function(){
   rhMap = new rhus.map( new rhus.contentProvider() );
   //Markers can't be clicked when zone layer is selected
   //http://lists.osgeo.org/pipermail/openlayers-users/2007-April/001475.html
-  rhMap.addMarkers();
   rhMap.addZones();
+  rhMap.addMarkers();
 });
