@@ -1,18 +1,18 @@
 
 body{
-	background-color: #000000;
-	background-image: url("../resources/wood.png");
+	background-color: #ffffff;
+	background-image: url("../resources/background.jpeg");
 	background-repeat: no-repeat;
 	margin-left:auto;
 	margin-right:auto;
 	width:1050px;
 	padding:0px;
 	font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
- font-weight:300;
+	font-weight:300;
 }
 
 p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
-	 font-weight:300;
+	font-weight:300;
 	letter-spacing:1px;
  }
 .menu{
@@ -24,8 +24,8 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 
 .header a{
 	background-image:url("../resources/header.png");
-	width:310px;
-	height:57px;
+	width:192px;
+	height:112px;
 	margin:13px 0px 0px 0px;
 	display:block;
 	text-indent:-40000px;
@@ -34,21 +34,17 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 
 .header a:hover {
 	background-image:url("../resources/headerHover.png");
-  width:310px;
-	  height:59px;
-		  margin:13px 0px 0px 0px;
-			  display:block;
+  width:192px;
+	height:112px;
+	margin:13px 0px 0px 0px;
+	display:block;
 
-}
-
-.menuNav{
-	margin-top:13px;
 }
 
 .menuNav {
 	color:#9A9E9A;
 	text-decoration:none;
-	margin:0px 20px 0px 0px;
+	margin:0px 40px 0px 0px;
 	font-size:12px;
 }
 
@@ -58,14 +54,13 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 
 .navItem a{
 	text-align:center;
-	/*background-image:url("../resources/menu.png");*/
 	width:62px;
 	height:59px;
 	float:left;
 	margin-left:20px;
-	margin-top:12px;
-	  color:#9A9E9A;
-		  text-decoration:none;
+	margin-top:50px;
+	color:#9A9E9A;
+	text-decoration:none;
 
 }
 
@@ -75,18 +70,18 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 	height:59px;
 	float:left;
 	margin-left:20px;
-	margin-top:12px;
+	margin-top:50px;
 
 }
 
 
 .mapcontainer{
-padding-top:108px;
-padding-left:12px;
+	padding-top:140px;
+	padding-left:12px;
 }
 
 .callout{
-	background-image:url("../resources/orangeOverlay.png");
+	background-image:url("../resources/popUp.png");
 	width:151px;
 	height:153px;
 	margin-left:7px;
@@ -104,7 +99,7 @@ padding-left:12px;
 .calloutCloseButton{
 	float:left;
 	margin-top:133px;
-	margin-left:15px;
+	margin-left:20px;
 }
 
 #myGallery
@@ -125,18 +120,17 @@ padding-left:12px;
 }
 
 .socialMedia{
-width:120px;
-height:40px;
-border-bottom:1px solid #FF7F00;
+	width:120px;
+	height:40px;
   position:absolute;
 	  z-index:1;
-margin-left:180px;
-margin-top:62px;
+	margin-left:180px;
+	margin-top:62px;
 }
 
 .socialMedia img{;
-	width:40px;
-	height:40px;
+	width:30px;
+	height:30px;
 }
 
 #facebook{
@@ -159,7 +153,6 @@ margin-top:62px;
 }
 
 .timeline img{
-	/*margin-top:42px;*/
 	margin-left:13px;
 }
 
@@ -170,8 +163,8 @@ margin-top:62px;
 
 .text{
 	padding-top:20px;
-	margin-left:147px;
-	color:#9A9E9A;
+	margin-left:215px;
+	color:#5B0829;
 	width:700px;
 	height:500px;
 	font-size:14px;
@@ -179,5 +172,5 @@ margin-top:62px;
 }
 
 .text a{
-	color:#FF7F00;
+	color:#B51F24;
 }
