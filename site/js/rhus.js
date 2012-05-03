@@ -192,6 +192,9 @@ rhus.map = new Class({
        }
      );
    this.map.addLayer(this.zoneLayer);
+   this.zoneLayer.events.register('loadend', this.zoneLayer, this.regLoadEnd);
+   this.zoneLayer.events.register('featureselected', this.zoneLayer, this.regLoadEnd);
+   this.map.layers[1].events.register('loadend', this.map.layers[1], this.regLoadEnd);
 
    this.map.setCenter(
       new OpenLayers.LonLat(-83.104019, 42.369959).transform(
@@ -228,6 +231,10 @@ rhus.map = new Class({
 
   },
 
+  regLoadEnd: function(){
+    alert('regLoadNed!');
+    console.log('hihihi');
+  },
 
   addMarkers: function(){
     console.log("Called addMarkers");
@@ -303,11 +310,19 @@ rhus.map = new Class({
           multiple: false, hover: false,
           toggleKey: "ctrlKey", // ctrl key removes from selection
           multipleKey: "shiftKey", // shift key adds to selection
-          onSelect:  function(){ //show feature callout }
+          onSelect:  function(){} //show feature callout }
         }
       );
       receiver.map.addControl(receiver.ctrlSelectFeatures);
       receiver.ctrlSelectFeatures.activate();
+
+
+      //and add the controls
+      var objFs = receiver.zoneLayer.features;
+      var theHTML = '';
+      for(var i=0;i<objFs.length;i++)
+        theHTML += '<input type="radio" name="selFeat" onclick="radioSelectFeature('+i+')"><input type="checkbox" checked onclick="changeFeatureVisibility(' + i + ',this.checked)"><label>' + objFs[i].attributes.name + '</label><br>';
+      document.getElementById("diva").innerHTML = theHTML;
     }
   },
 
