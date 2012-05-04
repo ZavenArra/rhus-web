@@ -409,7 +409,7 @@ rhus.map = new Class({
 
 
     this.map.setCenter(
-      new OpenLayers.LonLat(-83.104019, 42.369959).transform(
+      new OpenLayers.LonLat(rhusConfiguration.centerLongitude, rhusConfiguration.centerLatitude).transform(
         new OpenLayers.Projection("EPSG:4326"),
         this.map.getProjectionObject()
       ), 12
