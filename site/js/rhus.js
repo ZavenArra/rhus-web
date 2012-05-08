@@ -248,7 +248,7 @@ rhus.map = new Class({
   },
 
   regLoadEnd: function(){
-    alert('regLoadNed!');
+    //alert('regLoadNed!');
   },
 
   addMarkers: function(){
@@ -287,6 +287,31 @@ rhus.map = new Class({
     }
   },
 
+  //This function could go into a customer OL relevant library
+  getChangeFeatureVisibilityCallback: function(rhusMap, idx){
+    return function(event) {
+      var vlyr = rhusMap.zoneLayer;
+      var objF = vlyr.features[idx];
+
+      try{
+       // if(objF.id == vlyr.selectedFeatures[0].id)
+          //Not sure what this is for
+          //ctrlSelectFeatures.unselect(vlyr.selectedFeatures[0]);
+      }catch(err){
+        console.log('ERROR');
+        //document.getElementById("featDesc").innerHTML='error'
+      };
+
+      if(event.target.checked)
+        objF.attributes['visibility'] = "visible";
+      else
+        objF.attributes['visibility'] = "hidden";
+      vlyr.drawFeature(objF);
+    }
+  },
+
+
+
   getZonesRequestCallback: function(receiver){
     return function(responseJSON){
 
@@ -299,7 +324,7 @@ rhus.map = new Class({
 
       var features = new Array();
       responseJSON.rows.each(function(zone){
-       console.log(zone.value.name);
+        console.log(zone.value.name);
 
         console.log(zone.value.geojson);
         var zoneFeatures = geoJSONFormat.read(zone.value.geojson);
@@ -313,9 +338,9 @@ rhus.map = new Class({
 
         //Since features is an array, should loop through for robustness
         features.push(zoneFeatures[0]);
-    
+
       });
-      console.log(features);
+      //console.log(features);
 
       receiver.zoneLayer.addFeatures(features);
 
@@ -336,33 +361,47 @@ rhus.map = new Class({
 
       //and add the controls
       var objFs = receiver.zoneLayer.features;
-      var theHTML = '';
-      for(var i=0;i<objFs.length;i++)
-        theHTML += '<input type="radio" name="selFeat" onclick="radioSelectFeature('+i+')"><input type="checkbox" checked onclick="changeFeatureVisibility(' + i + ',this.checked)"><label>' + objFs[i].attributes.name + '</label><br>';
-      document.getElementById("diva").innerHTML = theHTML;
+      var featureCheckboxContainer = $("diva");
+      for(var i=0;i<objFs.length;i++){
+        var checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = true;
+        var callback = receiver.getChangeFeatureVisibilityCallback(receiver, i);
+        console.log(checkbox);
+        checkbox.addEvent('click', callback );
+        checkbox.inject(featureCheckboxContainer, 'bottom');
+        var label = document.createElement('label');
+        label.innerHTML = objFs[i].attributes.name;
+        label.inject(checkbox, 'after');
+        var br = document.createElement('br');
+        br.inject(label, 'after');
+      }
+      // theHTML += '<input type="checkbox" checked onclick="this.changeFeatureVisibility(' + i + ',this.checked)"><label>' + objFs[i].attributes.name + '</label><br>';
+      // document.getElementById("diva").innerHTML = theHTML;
     }
   },
 
+
   showCallout: function(marker, lonlat, id){
-     callout = $('callout');
-		 callout.style.top = marker.style.top;
-		 callout.style.left = marker.style.left;
-     calloutThumbnail = callout.getElements('.calloutThumbnail')[0];
-     calloutThumbnail.src = this.provider.getThumbSrc(id);
+    callout = $('callout');
+    callout.style.top = marker.style.top;
+    callout.style.left = marker.style.left;
+    calloutThumbnail = callout.getElements('.calloutThumbnail')[0];
+    calloutThumbnail.src = this.provider.getThumbSrc(id);
 
-     calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
-		 //TODO: provider should supply url
-		 calloutLightboxLink.href = "couchdb/" + this.provider.database +"/"+id+"/medium.jpg";
-		 if (this.milkbox != null){
-			 console.log("destroying the milkbox");
-			 this.milkbox.display.destroy();
-		 } 
-		 callout.inject(marker, 'before');
-     
-			 
-		 this.milkbox = new Milkbox({ });
+    calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
+    //TODO: provider should supply url
+    calloutLightboxLink.href = "couchdb/" + this.provider.database +"/"+id+"/medium.jpg";
+    if (this.milkbox != null){
+      console.log("destroying the milkbox");
+      this.milkbox.display.destroy();
+    } 
+    callout.inject(marker, 'before');
 
-     callout.style.display ="block";
+
+    this.milkbox = new Milkbox({ });
+
+    callout.style.display ="block";
 
   },
 
@@ -554,7 +593,7 @@ rhus.mapStyles.getTimelineStyles = function(){
       })
     });
 
-    styles.addUniqueValueRules("default", "visibility", {'visible':{strokeColor: "#ff0000", strokeWidth: 3}});
+    styles.addUniqueValueRules("default", "visibility", {'hidden':{display:"none"}});
 
     return styles;
 }
