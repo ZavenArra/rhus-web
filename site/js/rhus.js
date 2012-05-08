@@ -196,12 +196,28 @@ rhus.map = new Class({
    this.zoneLayer.events.register('featureselected', this.zoneLayer, this.regLoadEnd);
    this.map.layers[1].events.register('loadend', this.map.layers[1], this.regLoadEnd);
 
+/*
    this.map.setCenter(
-      new OpenLayers.LonLat(rhusConfiguration.longitude, rhusConfiguration.latitude).transform(
+      new OpenLayers.LonLat(rhusConfiguration.centerLongitude, rhusConfiguration.centerLatitude).transform(
         new OpenLayers.Projection("EPSG:4326"),
         this.map.getProjectionObject()
       ), 12
     );    
+    */
+
+    var proj = new OpenLayers.Projection("EPSG:4326");
+    var bounds = new OpenLayers.Bounds(rhusConfiguration.centerLongitude-rhusConfiguration.longitudeSpread,rhusConfiguration.centerLatitude-rhusConfiguration.latitudeSpread, rhusConfiguration.centerLongitude+rhusConfiguration.longitudeSpread, rhusConfiguration.centerLatitude+rhusConfiguration.latitudeSpread); 
+    bounds.transform(proj, this.map.getProjectionObject());
+    this.map.zoomToExtent(bounds);
+
+
+    /* Extent Box
+    var boxes = new OpenLayers.Layer.Boxes("boxes");
+    var box = new OpenLayers.Marker.Box(bounds);
+    boxes.addMarker(box);
+    this.map.addLayer(boxes);
+    */
+
     this.markers = new OpenLayers.Layer.Markers( "Plants" );
     this.map.addLayer(this.markers);
 
@@ -233,7 +249,6 @@ rhus.map = new Class({
 
   regLoadEnd: function(){
     alert('regLoadNed!');
-    console.log('hihihi');
   },
 
   addMarkers: function(){
@@ -286,16 +301,18 @@ rhus.map = new Class({
       responseJSON.rows.each(function(zone){
        console.log(zone.value.name);
 
-        console.log(zone.value.geometry);
-        var zoneGeometry = geoJSONFormat.read(zone.value.geometry);
-        console.log(zoneGeometry);
+        console.log(zone.value.geojson);
+        var zoneFeatures = geoJSONFormat.read(zone.value.geojson);
+        console.log(zoneFeatures);
 
         // var zoneFeature = geoJSONFormat.parseFeature(zoneGeometry);
         // var feature = new OpenLayers.Feature.Vector( zoneGeometry );
         // var feature = geoJsonFormatter.parseFeature(zoneGeometry);
         // console.log(zoneFeature);
         // zoneLayer.addFeatures(zoneGeometry);
-        features.push(zoneGeometry[0]);
+
+        //Since features is an array, should loop through for robustness
+        features.push(zoneFeatures[0]);
     
       });
       console.log(features);
