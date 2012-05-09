@@ -24,6 +24,14 @@
     "to" : "_spatial/*"
   },
   {
+    "from" : "_spatiallist/timeline/_show/*",
+    "to"   : "_show/*"
+  },
+  {
+   "from" : "_spatiallist/*",
+    "to" : "_spatiallist/*"
+  },
+  {
    "from" : "_show/*",
     "to" : "_show/*"
   },

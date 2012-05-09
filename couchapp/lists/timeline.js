@@ -1,11 +1,12 @@
 function(head, req) {
-  send("<ul>");
+ start({"code": 200, "headers": {"Content-Type": "text/html"}});
+  send("<html><body><ul>");
   while (row = getRow()) {
-    var html=null;
+    var html="";
     html += "<li>";
-    html += "<img src=\"_show/medium/"+row.id+"\"/>";
+    html += "<img src=\"_show/thumb/"+row.id+"\"/>";
     html += "</li>";
     send(html);
   }
-  send("</ul>");
+  send("</ul></html></body>");
 }
