@@ -128,6 +128,7 @@ rhus.map = new Class({
   timer : null,
 	milkbox : null,
   ctrlSelectFeatures : null,
+  
 
   initialize: function(contentProvider){
   
@@ -193,7 +194,7 @@ rhus.map = new Class({
      );
    this.map.addLayer(this.zoneLayer);
    this.zoneLayer.events.register('loadend', this.zoneLayer, this.regLoadEnd);
-   this.zoneLayer.events.register('featureselected', this.zoneLayer, this.regLoadEnd);
+   this.zoneLayer.events.register('featureselected', this.zoneLayer, this.featureSelected);
    this.map.layers[1].events.register('loadend', this.map.layers[1], this.regLoadEnd);
 
 /*
@@ -245,6 +246,12 @@ rhus.map = new Class({
       $('callout').style.display = "none";
     });
 
+  },
+
+  featureSelected: function(selectedFeature){
+    console.log(selectedFeature); 
+    href = "_spatiallist/timeline/documents?bbox="+selectedFeature.feature.attributes.boundingBox.join(',');
+    window.open(href, '_blank');
   },
 
   regLoadEnd: function(){
@@ -320,7 +327,7 @@ rhus.map = new Class({
         'internalProjection' : receiver.map.getProjectionObject(),
         'externalProjection': new OpenLayers.Projection("EPSG:4326")
       });
-      console.log(responseJSON);
+      //console.log(responseJSON);
 
       var features = new Array();
       responseJSON.rows.each(function(zone){
@@ -330,17 +337,12 @@ rhus.map = new Class({
         var zoneFeatures = geoJSONFormat.read(zone.value.geojson);
         console.log(zoneFeatures);
 
-        // var zoneFeature = geoJSONFormat.parseFeature(zoneGeometry);
-        // var feature = new OpenLayers.Feature.Vector( zoneGeometry );
-        // var feature = geoJsonFormatter.parseFeature(zoneGeometry);
-        // console.log(zoneFeature);
-        // zoneLayer.addFeatures(zoneGeometry);
-
-        //Since features is an array, should loop through for robustness
+        feature = zoneFeatures[0]; //only supporting 1 feature per file
+        feature.attributes['boundingBox'] = zone.value.boundingBox;
+        console.log(zone.value.boundingBox);
         features.push(zoneFeatures[0]);
 
       });
-      //console.log(features);
 
       receiver.zoneLayer.addFeatures(features);
 
