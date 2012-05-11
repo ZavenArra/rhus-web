@@ -393,7 +393,7 @@ rhus.map = new Class({
 
     calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
     //TODO: provider should supply url
-    calloutLightboxLink.href = "couchdb/" + this.provider.database +"/"+id+"/medium.jpg";
+    calloutLightboxLink.href = rhusConfiguration.urlPrefix + "/_show/medium/"+id;
     if (this.milkbox != null){
       console.log("destroying the milkbox");
       this.milkbox.display.destroy();
