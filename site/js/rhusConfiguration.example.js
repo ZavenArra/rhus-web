@@ -1,6 +1,6 @@
 var rhusConfiguration = {};
 rhusConfiguration.urlPrefix = "";
-rhusConfiguration.refreshRate = 20000;
+rhusConfiguration.refreshRate = 60000;
 rhusConfiguration.centerLongitude = -83.104019;
 rhusConfiguration.centerLatitude = 42.369959;
 rhusConfiguration.longitudeSpread = .40;
