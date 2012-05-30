@@ -13,7 +13,7 @@ var thisdate = new Date();
 var testURL = 'http://www.wildflowersofdetroit.org/medium/9725b95f37bf064ed48b21c2f7000cf7.jpg'; 
 var testURL2 = 'http://www.wildflowersofdetroit.org/?id=9725b95f37bf064ed48b21c2f7000cf7'; 
 
-db.view('couchapp/socialmedia', { include_docs: true}, function (err, res) {
+db.view('couchapp/cleanupattachments', { include_docs: true}, function (err, res) {
   if(err){
     console.log('Error: ',err,res);
     process.exit(1);
