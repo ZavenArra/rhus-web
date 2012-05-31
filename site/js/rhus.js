@@ -249,10 +249,16 @@ rhus.map = new Class({
   },
 
   featureSelected: function(selectedFeature){
-    console.log(selectedFeature); 
-    href = "_spatiallist/timeline/documents?bbox="+selectedFeature.feature.attributes.boundingBox.join(',');
-    window.open(href, '_blank');
-  },
+									 console.log("selectedFeature");
+									 calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
+									 calloutLightboxLink.href = rhusConfiguration.urlPrefix + "_show/medium/"+id;
+									 this.milkbox = new Milkbox({ });
+								 },
+//  featureSelected: function(selectedFeature){
+//    console.log(selectedFeature); 
+//    href = "_spatiallist/timeline/documents?bbox="+selectedFeature.feature.attributes.boundingBox.join(',');
+//    window.open(href, '_blank');
+//  },
 
   regLoadEnd: function(){
     //alert('regLoadNed!');
