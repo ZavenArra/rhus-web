@@ -109,8 +109,8 @@ rhus.contentProvider = new Class({
   },
 
   getThumbSrc : function(id){
-    console.log(rhusConfiguration.urlPrefix + '_show/thumb/'+id);
-    return rhusConfiguration.urlPrefix + '_show/thumb/'+id;
+    console.log(rhusConfiguration.urlPrefix + id +'/thumb.jpg');
+    return rhusConfiguration.urlPrefix + id +'/thumb.jpg';
   }
 
 });
@@ -192,12 +192,13 @@ rhus.map = new Class({
            styleMap: zoneStyles
        }
      );
+    //add zones later
    this.map.addLayer(this.zoneLayer);
    this.zoneLayer.events.register('loadend', this.zoneLayer, this.regLoadEnd);
    this.zoneLayer.events.register('featureselected', this.zoneLayer, this.featureSelected);
    this.map.layers[1].events.register('loadend', this.map.layers[1], this.regLoadEnd);
 
-/*
+   /*
    this.map.setCenter(
       new OpenLayers.LonLat(rhusConfiguration.centerLongitude, rhusConfiguration.centerLatitude).transform(
         new OpenLayers.Projection("EPSG:4326"),
@@ -221,6 +222,7 @@ rhus.map = new Class({
 
     this.markers = new OpenLayers.Layer.Markers( "Plants" );
     this.map.addLayer(this.markers);
+
 
     //map icons
     var size = new OpenLayers.Size(11,10);
@@ -353,6 +355,9 @@ rhus.map = new Class({
       receiver.zoneLayer.addFeatures(features);
 
 
+/* 
+ * Turning on this control brings the zones layer to the top.  Need to override openLayers code to change this behavior
+ * */
       receiver.ctrlSelectFeatures = new OpenLayers.Control.SelectFeature(
         receiver.zoneLayer,
         {
@@ -365,6 +370,7 @@ rhus.map = new Class({
       );
       receiver.map.addControl(receiver.ctrlSelectFeatures);
       receiver.ctrlSelectFeatures.activate();
+     /* */
 
 
       //and add the controls
@@ -399,7 +405,7 @@ rhus.map = new Class({
 
     calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
     //TODO: provider should supply url
-    calloutLightboxLink.href = rhusConfiguration.urlPrefix + "_show/medium/"+id;
+    calloutLightboxLink.href = rhusConfiguration.urlPrefix + id + "/medium.jpg";
     if (this.milkbox != null){
       console.log("destroying the milkbox");
       this.milkbox.display.destroy();

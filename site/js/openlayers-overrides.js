@@ -12,3 +12,8 @@ OpenLayers.Handler.Feature.prototype.activate = function() {
     return activated;
 };
 
+OpenLayers.Handler.Feature.prototype.handleMapEvents = function(evt) {
+  if (evt.type == "removelayer" || evt.property == "order") {
+    this.moveLayerToTop();
+  }
+};
