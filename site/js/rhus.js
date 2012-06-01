@@ -195,7 +195,7 @@ rhus.map = new Class({
     //add zones later
    this.map.addLayer(this.zoneLayer);
    this.zoneLayer.events.register('loadend', this.zoneLayer, this.regLoadEnd);
-   this.zoneLayer.events.register('featureselected', this.zoneLayer, this.featureSelected);
+   this.zoneLayer.events.register('featureselected', this.zoneLayer, this.featureSelected.bind(this));
    this.map.layers[1].events.register('loadend', this.map.layers[1], this.regLoadEnd);
 
    /*
@@ -248,21 +248,38 @@ rhus.map = new Class({
       $('callout').style.display = "none";
     });
 
-  },
+	},
 
-  featureSelected: function(selectedFeature){
-									 console.log("selectedFeature");
-									 calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
-									 calloutLightboxLink.href = rhusConfiguration.urlPrefix + "_show/medium/"+id;
-									 this.milkbox = new Milkbox({ });
-								 },
-//  featureSelected: function(selectedFeature){
-//    console.log(selectedFeature); 
-//    href = "_spatiallist/timeline/documents?bbox="+selectedFeature.feature.attributes.boundingBox.join(',');
-//    window.open(href, '_blank');
-//  },
+getAddImages : function(){
+								 return function (responseJSON){
+									 $('galleryContainer').set('html',responseJSON.imagestring);
+						//			 alert("Smoov and Bangin!");
+									 console.log(responseJSON);
+								 this.zoneMilkbox = new Milkbox({ });
+								 console.log("started the milkbox");
+								 this.zoneMilkbox.open('zone',0);
+								 console.log("opened the milkbox - should see some stuff");
+								 }
+							 },
 
-  regLoadEnd: function(){
+
+
+featureSelected : function(selectedFeature){
+										console.log(selectedFeature); 
+										href = "_spatiallist/timeline/documents?bbox="+selectedFeature.feature.attributes.boundingBox.join(',');
+										//    window.open(href, '_blank');
+										var myJSONRemote = new Request.JSON(
+												{
+														url: href,
+														method: 'get',
+														onComplete: this.getAddImages().bind(this) 
+														}
+												).send();
+									},
+
+
+
+  regLoadEnd : function(){
     //alert('regLoadNed!');
   },
 

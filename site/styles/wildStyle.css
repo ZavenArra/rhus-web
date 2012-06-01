@@ -176,3 +176,7 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 .text a{
 	color:#B51F24;
 }
+
+#galleryContainer{
+	display:none;
+}
