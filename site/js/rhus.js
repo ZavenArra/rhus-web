@@ -81,6 +81,19 @@ rhus.contentProvider = new Class({
 
   //map.raiseLayer(layer, 1) for up, or map.raiseLayer(layer, -1) for down.
 
+  timeline : function(boundingBox, callback){
+
+    href = "_spatiallist/timeline/documents?bbox="+boundingBox.join(',');
+    //    window.open(href, '_blank');
+    var myJSONRemote = new Request.JSON(
+      {
+        url: href,
+        method: 'get',
+        onComplete: callback
+      }
+    ).send();
+
+  },
 
   requestCallback : function(callerCallback){
     return function(responseJSON){
@@ -324,15 +337,7 @@ rhus.map = new Class({
     }
     console.log(boundingBox);
 
-    href = "_spatiallist/timeline/documents?bbox="+boundingBox.join(',');
-    //    window.open(href, '_blank');
-    var myJSONRemote = new Request.JSON(
-      {
-        url: href,
-        method: 'get',
-        onComplete: this.getAddImages().bind(this) 
-      }
-    ).send();
+    this.provider.timeline(boundingBox, this.getAddImages().bind(this));
   },
 
 
