@@ -195,7 +195,7 @@ rhus.map = new Class({
     //add zones later
    this.map.addLayer(this.zoneLayer);
    this.zoneLayer.events.register('loadend', this.zoneLayer, this.regLoadEnd);
-   this.zoneLayer.events.register('featureselected', this.zoneLayer, this.featureSelected);
+   this.zoneLayer.events.register('featureselected', this.zoneLayer, this.featureSelected.bind(this));
    this.map.layers[1].events.register('loadend', this.map.layers[1], this.regLoadEnd);
 
    /*
@@ -248,15 +248,43 @@ rhus.map = new Class({
       $('callout').style.display = "none";
     });
 
-  },
+	},
 
-  featureSelected: function(selectedFeature){
-    console.log(selectedFeature); 
-    href = "_spatiallist/timeline/documents?bbox="+selectedFeature.feature.attributes.boundingBox.join(',');
-    window.open(href, '_blank');
-  },
+getAddImages : function(){
+								 return function (responseJSON){
+									 $('galleryContainer').set('html',responseJSON.imagestring);
+						//			 alert("Smoov and Bangin!");
+									 console.log(responseJSON);
+									 if (this.zoneMilkbox != null){
+										 console.log("destroying the milkbox");
+										 this.zoneMilkbox.display.destroy();
+                   };
 
-  regLoadEnd: function(){
+								 this.zoneMilkbox = new Milkbox({ });
+								 console.log("started the milkbox");
+								 this.zoneMilkbox.open('zone',0);
+								 console.log("opened the milkbox - should see some stuff");
+								 }
+							 },
+
+
+
+featureSelected : function(selectedFeature){
+										console.log(selectedFeature); 
+										href = "_spatiallist/timeline/documents?bbox="+selectedFeature.feature.attributes.boundingBox.join(',');
+										//    window.open(href, '_blank');
+										var myJSONRemote = new Request.JSON(
+												{
+														url: href,
+														method: 'get',
+														onComplete: this.getAddImages().bind(this) 
+														}
+												).send();
+									},
+
+
+
+  regLoadEnd : function(){
     //alert('regLoadNed!');
   },
 
@@ -400,10 +428,17 @@ rhus.map = new Class({
     calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
     //TODO: provider should supply url
     calloutLightboxLink.href = rhusConfiguration.urlPrefix + id + "/medium.jpg";
-    if (this.milkbox != null){
-      console.log("destroying the milkbox");
-      this.milkbox.display.destroy();
-    } 
+	
+		//this is to destroy the callout (single image) milkbox
+		if (this.milkbox != null){
+			console.log("destroying the milkbox");
+			this.milkbox.display.destroy();
+		}
+//this is to destroy the timeline gallery(multiple image) milkbox
+		if (this.zoneMilkbox != null){
+			console.log("destroying the milkbox");
+			this.zoneMilkbox.display.destroy();
+		};
     callout.inject(marker, 'before');
 
 

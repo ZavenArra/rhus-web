@@ -93,6 +93,8 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 .calloutThumbnail{
 	margin-top:43px;
 	margin-left:10px;
+	width:100px;
+	height:100px;
 	border:1px solid #781214;
 }
 
@@ -173,4 +175,8 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 
 .text a{
 	color:#B51F24;
+}
+
+#galleryContainer{
+	display:none;
 }
