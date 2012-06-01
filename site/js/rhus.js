@@ -255,6 +255,11 @@ getAddImages : function(){
 									 $('galleryContainer').set('html',responseJSON.imagestring);
 						//			 alert("Smoov and Bangin!");
 									 console.log(responseJSON);
+									 if (this.zoneMilkbox != null){
+										 console.log("destroying the milkbox");
+										 this.zoneMilkbox.display.destroy();
+                   };
+
 								 this.zoneMilkbox = new Milkbox({ });
 								 console.log("started the milkbox");
 								 this.zoneMilkbox.open('zone',0);
@@ -423,10 +428,17 @@ featureSelected : function(selectedFeature){
     calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
     //TODO: provider should supply url
     calloutLightboxLink.href = rhusConfiguration.urlPrefix + id + "/medium.jpg";
-    if (this.milkbox != null){
-      console.log("destroying the milkbox");
-      this.milkbox.display.destroy();
-    } 
+	
+		//this is to destroy the callout (single image) milkbox
+		if (this.milkbox != null){
+			console.log("destroying the milkbox");
+			this.milkbox.display.destroy();
+		}
+//this is to destroy the timeline gallery(multiple image) milkbox
+		if (this.zoneMilkbox != null){
+			console.log("destroying the milkbox");
+			this.zoneMilkbox.display.destroy();
+		};
     callout.inject(marker, 'before');
 
 

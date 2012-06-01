@@ -3,9 +3,9 @@ function(head, req) {
   send('{"imagestring":" ');
   while (row = getRow()) {
     var html="";
-		html+= "<a data-milkbox=\\\"zone\\\">";
-   html += "<img src=\\\"_show/medium/"+row.id+"\\\" />";
-   html+= "</a";
+//		html+= "<a data-milkbox=\\\"zone\\\">";
+   html += "<a href=\\\"_show/medium/"+row.id+"\\\"data-milkbox=\\\"zone\\\" \\\" title=\\\""+row.comment+"\\\" />";
+//   html+= "</a>";
 		send(html);
   }
   send(' "}');
