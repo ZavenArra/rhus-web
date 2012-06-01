@@ -252,7 +252,7 @@ rhus.map = new Class({
 
 getAddImages : function(){
 								 return function (responseJSON){
-									 $('galleryContainer').set('html',responseJSON.imagestring);
+									 $('galleryContainer').set('html',unescape(responseJSON.imagestring));
 						//			 alert("Smoov and Bangin!");
 									 console.log(responseJSON);
 									 if (this.zoneMilkbox != null){
@@ -399,6 +399,7 @@ featureSelected : function(selectedFeature){
       var objFs = receiver.zoneLayer.features;
       var featureCheckboxContainer = $("diva");
       for(var i=0;i<objFs.length;i++){
+        continue;
         var checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.checked = true;

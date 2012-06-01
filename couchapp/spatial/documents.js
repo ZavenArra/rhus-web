@@ -1,1 +1,1 @@
-function(doc) { if(doc.latitude && doc.longitude){ emit( {"type":"Point", "coordinates":[parseFloat(doc.latitude), parseFloat(doc.longitude)] }, [doc.id, doc.created_at]); } }
+function(doc) { if(doc.latitude && doc.longitude){ emit( {"type":"Point", "coordinates":[parseFloat(doc.latitude), parseFloat(doc.longitude)], "created_at" : doc.created_at }, { "id" : doc._id,  "created_at" : doc.created_at, "comment" : doc.comment, "reporter" : doc.reporter } ); } }
