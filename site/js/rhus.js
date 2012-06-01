@@ -128,6 +128,7 @@ rhus.map = new Class({
   timer : null,
 	milkbox : null,
   ctrlSelectFeatures : null,
+  controls: null,
   
 
   initialize: function(contentProvider){
@@ -232,7 +233,24 @@ rhus.map = new Class({
     this.map.addControl(new OpenLayers.Control.LayerSwitcher());
     this.map.addControl(new OpenLayers.Control.MousePosition());
 
-    //Initialize here differet markers the map may need
+
+    this.controls = {
+      // point: new OpenLayers.Control.DrawFeature(vectors,
+        // OpenLayers.Handler.Point),
+        //  line: new OpenLayers.Control.DrawFeature(vectors,
+          //  OpenLayers.Handler.Path),
+          polygon: new OpenLayers.Control.DrawFeature(this.zoneLayer,
+          OpenLayers.Handler.Polygon),
+          drag: new OpenLayers.Control.DragFeature(this.zoneLayer)
+    };
+
+    for(var key in this.controls) {
+      this.map.addControl(this.controls[key]);
+    }
+
+    document.getElementById('noneToggle').checked = true;
+
+     //Initialize here differet markers the map may need
     console.log("Initialized");
 
 		that = this;
@@ -248,39 +266,67 @@ rhus.map = new Class({
       $('callout').style.display = "none";
     });
 
-	},
+  },
 
-getAddImages : function(){
-								 return function (responseJSON){
-									 $('galleryContainer').set('html',unescape(responseJSON.imagestring));
-						//			 alert("Smoov and Bangin!");
-									 console.log(responseJSON);
-									 if (this.zoneMilkbox != null){
-										 console.log("destroying the milkbox");
-										 this.zoneMilkbox.display.destroy();
-                   };
-
-								 this.zoneMilkbox = new Milkbox({ });
-								 console.log("started the milkbox");
-								 this.zoneMilkbox.open('zone',0);
-								 console.log("opened the milkbox - should see some stuff");
-								 }
-							 },
+  toggleControl : function(element) {
+    console.log(this.controls);
+    for(key in this.controls) {
+      var control = this.controls[key];
+      if(element.value == key && element.checked) {
+        control.activate();
+      } else {
+        control.deactivate();
+      }
+    }
+  },
 
 
 
-featureSelected : function(selectedFeature){
-										console.log(selectedFeature); 
-										href = "_spatiallist/timeline/documents?bbox="+selectedFeature.feature.attributes.boundingBox.join(',');
-										//    window.open(href, '_blank');
-										var myJSONRemote = new Request.JSON(
-												{
-														url: href,
-														method: 'get',
-														onComplete: this.getAddImages().bind(this) 
-														}
-												).send();
-									},
+  getAddImages : function(){
+    return function (responseJSON){
+      $('galleryContainer').set('html',unescape(responseJSON.imagestring));
+      //			 alert("Smoov and Bangin!");
+      console.log(responseJSON);
+      if (this.zoneMilkbox != null){
+        console.log("destroying the milkbox");
+        this.zoneMilkbox.display.destroy();
+      };
+
+      this.zoneMilkbox = new Milkbox({ });
+      console.log("started the milkbox");
+      this.zoneMilkbox.open('zone',0);
+      console.log("opened the milkbox - should see some stuff");
+    }
+  },
+
+
+
+  featureSelected : function(selectedFeature){
+    var boundingBox;
+      console.log(selectedFeature);
+    if(selectedFeature.feature.attributes.boundingBox != null){
+      boundingBox = selectedFeature.feature.attributes.boundingBox;
+    } else {
+      //console.log(selectedFeature);
+      var bounds = selectedFeature.feature.geometry.bounds;
+      bounds = bounds.transform(
+        this.map.getProjectionObject(),
+        new OpenLayers.Projection("EPSG:4326")
+        );
+      boundingBox =[bounds.bottom, bounds.left, bounds.top, bounds.right];
+    }
+    console.log(boundingBox);
+
+    href = "_spatiallist/timeline/documents?bbox="+boundingBox.join(',');
+    //    window.open(href, '_blank');
+    var myJSONRemote = new Request.JSON(
+      {
+        url: href,
+        method: 'get',
+        onComplete: this.getAddImages().bind(this) 
+      }
+    ).send();
+  },
 
 
 

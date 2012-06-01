@@ -62,7 +62,34 @@
 						</div>
 
 					<div id="map" class="smallmap" style="display:block"></div>
+
           <div id="diva"></div>
+          <div id="controls">
+            <ul id="controlToggle">
+                <li>
+                    <input type="radio" name="type" value="none" id="noneToggle"
+                           onclick="rhMap.toggleControl(this);" checked="checked" />
+                    <label for="noneToggle">navigate</label>
+                </li>
+                <li>
+                    <input type="radio" name="type" value="point" id="pointToggle" onclick="rhMap.toggleControl(this);" />
+                    <label for="pointToggle">draw point</label>
+                </li>
+                <li>
+                    <input type="radio" name="type" value="line" id="lineToggle" onclick="rhMap.toggleControl(this);" />
+                    <label for="lineToggle">draw line</label>
+                </li>
+                <li>
+                    <input type="radio" name="type" value="polygon" id="polygonToggle" onclick="rhMap.toggleControl(this);" />
+                    <label for="polygonToggle">draw polygon</label>
+                </li>
+                <li>
+                    <input type="radio" name="type" value="drag" id="dragToggle"
+                           onclick="rhMap.toggleControl(this);" />
+                    <label for="dragToggle">drag feature</label>
+                </li>
+            </ul>
+          </div>
 				</div>
 
 
