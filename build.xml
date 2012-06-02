@@ -1,12 +1,29 @@
 <project name="rhus-web">
 
   <target name="setup">
-    //checkout submodules, recursively
+    <exec executable="git">
+      <arg value="submodule"/>
+      <arg value="init"/>
+    </exec>
+    <exec executable="git">
+      <arg value="submodule"/>
+      <arg value="update"/>
+    </exec>
+    <exec executable="git" dir="geocouch-utils">
+      <arg value="submodule"/>
+      <arg value="init"/>
+    </exec>
+    <exec executable="git" dir="geocouch-utils">
+      <arg value="submodule"/>
+      <arg value="update"/>
+    </exec>
   </target>
 
   <target name="deploy">
+    <!--
     //push geocouch utils
     //push rhus couchapp
+    -->
   </target>
 
 </project>
