@@ -1,0 +1,3 @@
+[submodule "geocouch-utils"]
+	path = geocouch-utils
+	url = https://github.com/vmx/geocouch-utils.git
