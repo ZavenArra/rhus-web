@@ -1,0 +1,12 @@
+<project name="rhus-web">
+
+  <target name="setup">
+    //checkout submodules, recursively
+  </target>
+
+  <target name="deploy">
+    //push geocouch utils
+    //push rhus couchapp
+  </target>
+
+</project>
