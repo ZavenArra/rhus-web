@@ -149,6 +149,7 @@ rhus.map = new Class({
 	milkbox : null,
   ctrlSelectFeatures : null,
   controls: null,
+  picker: null,
   
 
   initialize: function(contentProvider){
@@ -286,7 +287,32 @@ rhus.map = new Class({
       $('callout').style.display = "none";
     });
 
+    //initialize the date range picker
+    this.picker = new Picker.Date.Range($$('input[type="text"]'), {
+      timePicker: false,
+      columns: 3,
+      //	pickerClass:'datepicker_dashboard', 
+      positionOffset: {x:- 235, y: 0}
+      format: '%Y-%m-%d',
+      onClose: this.getDateRangePickerCallback(this)
+
+		});
+
   },
+
+  getDateRangePickerCallback : function(reciever){
+    return function(){
+      console.log(reciever.picker);
+      var startEndDate = reciever.picker.getStartEndDate().split( "-" );
+      var startDate = startEndDate[0];
+      var endDate = startEndDate[0];
+      reciever.provider.startDate = startDate;
+      reciever.provider.endDate = endDate;
+      alert(reciever.provider.startDate);
+      alert(reciever.provider.endDate);
+    }
+  },
+
 
   toggleControl : function(element) {
     console.log(this.controls);
@@ -716,12 +742,6 @@ window.addEvent( "domready", function(){
 	//http://lists.osgeo.org/pipermail/openlayers-users/2007-April/001475.html
 	rhMap.addZones();
 	rhMap.addMarkers();
-	var picker = new Picker.Date.Range($$('input[type="text"]'), {
-		timePicker: false,
-		columns: 3,
-	//	pickerClass:'datepicker_dashboard', 
-		positionOffset: {x:- 235, y: 0}
-		});
 });
 	
 
