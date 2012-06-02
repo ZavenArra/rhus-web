@@ -45,12 +45,19 @@ rhus.contentProvider = new Class({
   /*TODO: we'll want to track update_seq for each view that's being queried later on, 
   * or similar strategy for making sure subsequent request
   * */
-  startKey: null,
+  startDateRange: null, //"2012-02-16",
+  endDateRange: null, //"2012-03-16", 
 
 
   mapPoints : function(callback){
 
-    url = rhusConfiguration.urlPrefix + this.galleryDocumentsViewPath + "?update_seq=true&startKey="+this.startKey;
+    url = rhusConfiguration.urlPrefix + this.galleryDocumentsViewPath + "?update_seq=true";
+    if(this.startDateRange != null){
+      url+="&startkey="+JSON.stringify(this.startDateRange);
+    }
+    if(this.endDateRange != null){
+      url+="&endkey="+JSON.stringify(this.endDateRange);
+    }
     console.log("CouchDB: "+url);
 
     console.log(callback);
@@ -74,6 +81,19 @@ rhus.contentProvider = new Class({
 
   //map.raiseLayer(layer, 1) for up, or map.raiseLayer(layer, -1) for down.
 
+  timeline : function(boundingBox, callback){
+
+    href = "_spatiallist/timeline/documents?bbox="+boundingBox.join(',');
+    //    window.open(href, '_blank');
+    var myJSONRemote = new Request.JSON(
+      {
+        url: href,
+        method: 'get',
+        onComplete: callback
+      }
+    ).send();
+
+  },
 
   requestCallback : function(callerCallback){
     return function(responseJSON){
@@ -317,15 +337,7 @@ rhus.map = new Class({
     }
     console.log(boundingBox);
 
-    href = "_spatiallist/timeline/documents?bbox="+boundingBox.join(',');
-    //    window.open(href, '_blank');
-    var myJSONRemote = new Request.JSON(
-      {
-        url: href,
-        method: 'get',
-        onComplete: this.getAddImages().bind(this) 
-      }
-    ).send();
+    this.provider.timeline(boundingBox, this.getAddImages().bind(this));
   },
 
 
