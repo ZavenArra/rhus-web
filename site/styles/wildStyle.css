@@ -76,7 +76,7 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 
 
 .mapcontainer{
-	padding-top:40px;
+	padding-top:20px;
 	padding-left:12px;
 }
 
@@ -182,7 +182,7 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 }
 
 .dateRange{
-	padding-top:120px;
-	padding-left:400px;
+	padding-top:95px;
+	padding-left:600px;
 	z-index:20;
 }
