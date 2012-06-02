@@ -83,7 +83,7 @@ rhus.contentProvider = new Class({
 
   timeline : function(boundingBox, callback){
 
-    href = "_spatiallist/timeline/documents?bbox="+boundingBox.join(',');
+    href = "_spatial/documents?bbox="+boundingBox.join(',');
     //    window.open(href, '_blank');
     var myJSONRemote = new Request.JSON(
       {
@@ -304,6 +304,12 @@ rhus.map = new Class({
 
   getAddImages : function(){
     return function (responseJSON){
+      $('galleryContainer').set('html', '');
+
+      for(var doc in responseJSON.rows) {
+        var value = doc.value;
+      }
+
       $('galleryContainer').set('html',unescape(responseJSON.imagestring));
       //			 alert("Smoov and Bangin!");
       console.log(responseJSON);
