@@ -45,18 +45,18 @@ rhus.contentProvider = new Class({
   /*TODO: we'll want to track update_seq for each view that's being queried later on, 
   * or similar strategy for making sure subsequent request
   * */
-  startDateRange: null, //"2012-02-16",
-  endDateRange: null, //"2012-03-16", 
+  startDate: null, //"2012-02-16",
+  endDate: null, //"2012-03-16", 
 
 
   mapPoints : function(callback){
 
     url = rhusConfiguration.urlPrefix + this.galleryDocumentsViewPath + "?update_seq=true";
-    if(this.startDateRange != null){
-      url+="&startkey="+JSON.stringify(this.startDateRange);
+    if(this.startDate != null){
+      url+="&startkey="+JSON.stringify(this.startDate);
     }
-    if(this.endDateRange != null){
-      url+="&endkey="+JSON.stringify(this.endDateRange);
+    if(this.endDate != null){
+      url+="&endkey="+JSON.stringify(this.endDate);
     }
     console.log("CouchDB: "+url);
 
@@ -66,6 +66,10 @@ rhus.contentProvider = new Class({
     this.requeryMapPoints();
 
     //Set Timeout to update the map
+    if(this.timer != null){
+      this.timer.destroy();
+      this.timer = null;
+    }
     this.timer = this.requeryMapPoints.bind(this).periodical(rhusConfiguration.refreshRate);
   },
 
@@ -292,24 +296,18 @@ rhus.map = new Class({
       timePicker: false,
       columns: 3,
       //	pickerClass:'datepicker_dashboard', 
-      positionOffset: {x:- 235, y: 0}
+      positionOffset: {x:- 235, y: 0},
       format: '%Y-%m-%d',
-      onClose: this.getDateRangePickerCallback(this)
-
+      onSelect: this.getDateRangePickerCallback(this)
 		});
 
   },
 
   getDateRangePickerCallback : function(reciever){
-    return function(){
-      console.log(reciever.picker);
-      var startEndDate = reciever.picker.getStartEndDate().split( "-" );
-      var startDate = startEndDate[0];
-      var endDate = startEndDate[0];
-      reciever.provider.startDate = startDate;
-      reciever.provider.endDate = endDate;
-      alert(reciever.provider.startDate);
-      alert(reciever.provider.endDate);
+    return function(startDate, endDate){
+      reciever.provider.startDate = new Date(startDate).format('%Y-%m-%d');
+      reciever.provider.endDate = new Date(endDate).format('%Y-%m-%d');
+      reciever.addMarkers();
     }
   },
 
