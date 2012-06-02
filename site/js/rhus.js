@@ -695,7 +695,15 @@ window.addEvent( "domready", function(){
   rhNavigation = new rhus.navigation();
   rhMap = new rhus.map( new rhus.contentProvider() );
   //Markers can't be clicked when zone layer is selected
-  //http://lists.osgeo.org/pipermail/openlayers-users/2007-April/001475.html
-  rhMap.addZones();
-  rhMap.addMarkers();
+	//http://lists.osgeo.org/pipermail/openlayers-users/2007-April/001475.html
+	rhMap.addZones();
+	rhMap.addMarkers();
+	var picker = new Picker.Date.Range($$('input[type="text"]'), {
+		timePicker: false,
+		columns: 3,
+	//	pickerClass:'datepicker_dashboard', 
+		positionOffset: {x: 5, y: 0}
+		});
 });
+	
+
