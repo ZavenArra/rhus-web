@@ -714,7 +714,7 @@ window.addEvent( "domready", function(){
 		timePicker: false,
 		columns: 3,
 	//	pickerClass:'datepicker_dashboard', 
-		positionOffset: {x: 5, y: 0}
+		positionOffset: {x:- 235, y: 0}
 		});
 });
 	
