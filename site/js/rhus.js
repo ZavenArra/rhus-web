@@ -89,7 +89,8 @@ rhus.contentProvider = new Class({
 
   timeline : function(boundingBox, callback){
 
-    href = "_spatial/documents?bbox="+boundingBox.join(',');
+    //href = "_spatial/documents?bbox="+boundingBox.join(',');
+    href = "_spatiallist/timeline/documents?bbox="+boundingBox.join(',');
     //    window.open(href, '_blank');
     var myJSONRemote = new Request.JSON(
       {
@@ -339,8 +340,8 @@ rhus.map = new Class({
         var value = doc.value;
       }
 
-      $('galleryContainer').set('html',unescape(responseJSON.imagestring));
       console.log(responseJSON);
+      $('galleryContainer').set('html',unescape(responseJSON.imagestring));
       if (this.zoneMilkbox != null){
         console.log("destroying the milkbox");
         this.zoneMilkbox.display.destroy();
