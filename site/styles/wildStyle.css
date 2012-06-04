@@ -112,7 +112,7 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 
 .logo{
 	float:right;
-	margin-right:370px;
+	margin-right:400px;
 	padding-top:5px;	
 }
 
@@ -121,13 +121,22 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 	z-index:-555;
 }
 
+.logo a{
+	color:#5B0829;
+	padding-left:10px;
+}
+
+.logo a:hover {
+	color:#B51F24;
+}
+
 .socialMedia{
 	width:120px;
 	height:40px;
   position:absolute;
 	  z-index:1;
 	margin-left:180px;
-	margin-top:62px;
+	margin-top:94px;
 }
 
 .socialMedia img{;

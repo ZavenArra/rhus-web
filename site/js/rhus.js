@@ -301,7 +301,7 @@ rhus.map = new Class({
       timePicker: false,
       columns: 3,
       //	pickerClass:'datepicker_dashboard', 
-      positionOffset: {x:- 235, y: 0},
+      positionOffset: {x:- 212, y: 0},
       format: '%Y-%m-%d',
       onSelect: this.getDateRangePickerCallback(this)
 		});
