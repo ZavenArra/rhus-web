@@ -71,7 +71,8 @@ rhus.contentProvider = new Class({
       delete this.timer;
       this.timer = null;
     }
-    this.timer = this.requeryMapPoints.bind(this).periodical(rhusConfiguration.refreshRate);
+    //TODO: enable timed requery
+    //this.timer = this.requeryMapPoints.bind(this).periodical(rhusConfiguration.refreshRate);
   },
 
   zones : function(callback){
