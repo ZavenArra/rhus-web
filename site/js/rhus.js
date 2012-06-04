@@ -408,8 +408,8 @@ rhus.map = new Class({
 
       console.log("adding new markers");
       responseJSON.rows.each(function(row){
-        longitude = row.value.longitude;
-        latitude = row.value.latitude;
+        longitude = row.value.geometry.coordinates[0];
+        latitude = row.value.geometry.coordinates[1];
         lonlat = new OpenLayers.LonLat(longitude, latitude).transform(
           new OpenLayers.Projection("EPSG:4326"),
           receiver.map.getProjectionObject());
