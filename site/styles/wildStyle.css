@@ -186,3 +186,8 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 	padding-left:600px;
 	z-index:20;
 }
+
+.dateRange input{
+	width:170px;
+	color:#5B0829;
+}
