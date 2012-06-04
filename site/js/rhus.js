@@ -52,6 +52,7 @@ rhus.contentProvider = new Class({
   mapPoints : function(callback){
 
     url = rhusConfiguration.urlPrefix + this.galleryDocumentsViewPath + "?update_seq=true";
+    console.log(this.startDate);
     if(this.startDate != null){
       url+="&startkey="+JSON.stringify(this.startDate);
     }
@@ -60,17 +61,17 @@ rhus.contentProvider = new Class({
     }
     console.log("CouchDB: "+url);
 
-    console.log(callback);
+    //console.log(callback);
     this.callerCallback = callback;
-    console.log(this.callerCallback);
-    this.requeryMapPoints();
+    //console.log(this.callerCallback);
+    this.requeryMapPoints(url);
 
     //Set Timeout to update the map
     if(this.timer != null){
-      this.timer.destroy();
+      delete this.timer;
       this.timer = null;
     }
-    this.timer = this.requeryMapPoints.bind(this).periodical(rhusConfiguration.refreshRate);
+    //this.timer = this.requeryMapPoints.bind(this).periodical(rhusConfiguration.refreshRate);
   },
 
   zones : function(callback){
@@ -116,9 +117,9 @@ rhus.contentProvider = new Class({
     }
   },
 
-  requeryMapPoints : function(){
+  requeryMapPoints : function(url){
 
-    console.log("Requery");
+    console.log("Requery "+url);
 
     console.log(this.callerCallback);
 
@@ -128,7 +129,10 @@ rhus.contentProvider = new Class({
       data: {
         json: 'yes'
       },
-    onComplete: this.requestCallbackWithUpdateSeq(this.callerCallback).bind(this) }).send();  
+      onComplete: this.requestCallback(this.callerCallback).bind(this),
+      onFailure: function() { alert('query failure'); },
+      onTimeout: function() { alert('query timeout'); }
+    }).send();  
 
   },
 
@@ -335,7 +339,6 @@ rhus.map = new Class({
       }
 
       $('galleryContainer').set('html',unescape(responseJSON.imagestring));
-      //			 alert("Smoov and Bangin!");
       console.log(responseJSON);
       if (this.zoneMilkbox != null){
         console.log("destroying the milkbox");
@@ -391,7 +394,7 @@ rhus.map = new Class({
   getMapDataRequestCallback: function(receiver){
 
     return function(responseJSON){
-
+      //TODO: move this out of the callback
       callout = $('callout');
       callout.inject($('body'));
 
