@@ -271,7 +271,11 @@ rhus.map = new Class({
         //  line: new OpenLayers.Control.DrawFeature(vectors,
           //  OpenLayers.Handler.Path),
           polygon: new OpenLayers.Control.DrawFeature(this.zoneLayer,
-          OpenLayers.Handler.Polygon),
+          OpenLayers.Handler.Polygon, { 'callbacks': { 'done' : function(geometry){ 
+            this.drawFeature(geometry); 
+            //Gwen's Routine
+            alert(geometry);
+          } } } ),
           drag: new OpenLayers.Control.DragFeature(this.zoneLayer)
     };
 
