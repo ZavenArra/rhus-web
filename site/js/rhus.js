@@ -89,7 +89,8 @@ rhus.contentProvider = new Class({
 
   timeline : function(boundingBox, callback){
 
-    href = "_spatial/documents?bbox="+boundingBox.join(',');
+    //href = "_spatial/documents?bbox="+boundingBox.join(',');
+    href = "_spatiallist/timeline/documents?bbox="+boundingBox.join(',');
     //    window.open(href, '_blank');
     var myJSONRemote = new Request.JSON(
       {
@@ -270,7 +271,11 @@ rhus.map = new Class({
         //  line: new OpenLayers.Control.DrawFeature(vectors,
           //  OpenLayers.Handler.Path),
           polygon: new OpenLayers.Control.DrawFeature(this.zoneLayer,
-          OpenLayers.Handler.Polygon),
+          OpenLayers.Handler.Polygon, { 'callbacks': { 'done' : function(geometry){ 
+            this.drawFeature(geometry); 
+            //Gwen's Routine
+            alert(geometry);
+          } } } ),
           drag: new OpenLayers.Control.DragFeature(this.zoneLayer)
     };
 
@@ -339,8 +344,8 @@ rhus.map = new Class({
         var value = doc.value;
       }
 
-      $('galleryContainer').set('html',unescape(responseJSON.imagestring));
       console.log(responseJSON);
+      $('galleryContainer').set('html',unescape(responseJSON.imagestring));
       if (this.zoneMilkbox != null){
         console.log("destroying the milkbox");
         this.zoneMilkbox.display.destroy();
