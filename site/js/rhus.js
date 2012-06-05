@@ -283,7 +283,7 @@ rhus.map = new Class({
       this.map.addControl(this.controls[key]);
     }
 
-//    document.getElementById('noneToggle').checked = true;
+    //document.getElementById('noneToggle').checked = true;
 
      //Initialize here differet markers the map may need
     console.log("Initialized");
