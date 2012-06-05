@@ -19,7 +19,7 @@ db.view('rh-fixes/wrongGeoJson', { include_docs: true }, function (err, res) {
 
     var doc = row;
 
-    if(/*!doc.geometry && */doc.latitude && doc.longitude){
+    if(!doc.geometry && doc.latitude && doc.longitude){
 
       doc.geometry = {
         "type" : "Point",
@@ -27,7 +27,7 @@ db.view('rh-fixes/wrongGeoJson', { include_docs: true }, function (err, res) {
       };
 
 
-      console.warn('Updating document '+doc.id+" "+doc.rev);
+      console.warn('Updating document '+doc._id+" "+doc._rev);
 
       db.save(doc._id, doc._rev, doc,
         function(err, res){
