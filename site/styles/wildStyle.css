@@ -13,9 +13,9 @@ body{
 
 .polyInstructions{
 width:1050px;
-z-index:200;
+height:auto;
+z-index:500;
 background-color:#000000;
-opacity: .5;
 }
 
 
@@ -169,6 +169,7 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 .timeline{
 	width:975px;
 	height:575px;
+	padding-top:120px;
 }
 
 .timeline img{
@@ -213,7 +214,9 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 
 .drawingTool{
 	padding-top: 5px;
-	padding-left:500px;
+/*	padding-left:500px;*/
+	float:right;
+	margin-right:10px;
 	z-index:21;
 }
 
