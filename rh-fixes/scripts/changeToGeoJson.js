@@ -19,11 +19,11 @@ db.view('rh-fixes/wrongGeoJson', { include_docs: true }, function (err, res) {
 
     var doc = row;
 
-    if(!doc.geometry && doc.latitude && doc.longitude){
+    if(/*!doc.geometry && */doc.latitude && doc.longitude){
 
       doc.geometry = {
         "type" : "Point",
-        "coordinates" : [doc.longitude, doc.latitude]
+        "coordinates" : [parseFloat(doc.latitude), parseFloat(doc.longitude)]
       };
 
 
