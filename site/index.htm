@@ -63,8 +63,15 @@
 
 			</div>
 				<div class="dateRange">			 
-				<p> <input type="text" value="Choose a Date Range" /> </p>
-			</div>
+					<p> <input type="text" value="Choose a Date Range" id="picker" /> </p>
+					<input type="button" name="allpoints" value="See All Points" id="clearDateRange" 
+						onclick="rhMap.clearDateRange(this);"/>
+				</div>
+				
+				<div class="drawingTool">
+					<input type="button" name="type" value="Draw a Focus Area" id="polygonToggle" 
+					onclick="rhMap.startDrawing(this);" />
+				</div>
 
 					<div class="mapcontainer">
 						<div id="callout" class="callout">
@@ -80,28 +87,29 @@
           <div id="diva"></div>
           <div id="controls">
             <ul id="controlToggle">
-                <li>
+               <!-- <li>
                     <input type="radio" name="type" value="none" id="noneToggle"
-                           onclick="rhMap.toggleControl(this);" checked="checked" />
+                           onclick="rhMap.toggleControl(this);" />
                     <label for="noneToggle">navigate</label>
                 </li>
                 <li>
                     <input type="radio" name="type" value="point" id="pointToggle" onclick="rhMap.toggleControl(this);" />
                     <label for="pointToggle">draw point</label>
-                </li>
+										</li>
                 <li>
-                    <input type="radio" name="type" value="line" id="lineToggle" onclick="rhMap.toggleControl(this);" />
+                    <input type="button" name="type" value="line" id="lineToggle" onclick="rhMap.toggleControl(this);" />
                     <label for="lineToggle">draw line</label>
-                </li>
+										</li> 
                 <li>
-                    <input type="radio" name="type" value="polygon" id="polygonToggle" onclick="rhMap.toggleControl(this);" />
+								<input type="button" name="type" value="polygon" id="polygonToggle" 
+															onclick="rhMap.startDrawing(this);" />
                     <label for="polygonToggle">draw polygon</label>
                 </li>
                 <li>
                     <input type="radio" name="type" value="drag" id="dragToggle"
                            onclick="rhMap.toggleControl(this);" />
                     <label for="dragToggle">drag feature</label>
-                </li>
+										</li>-->
             </ul>
           </div>
 				</div>

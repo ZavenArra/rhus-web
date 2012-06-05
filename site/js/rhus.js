@@ -273,8 +273,8 @@ rhus.map = new Class({
           polygon: new OpenLayers.Control.DrawFeature(this.zoneLayer,
           OpenLayers.Handler.Polygon, { 'callbacks': { 'done' : function(geometry){ 
             this.drawFeature(geometry); 
-            //Gwen's Routine
-            alert(geometry);
+						this.deactivate();
+           // alert(geometry);
           } } } ),
           drag: new OpenLayers.Control.DragFeature(this.zoneLayer)
     };
@@ -283,7 +283,7 @@ rhus.map = new Class({
       this.map.addControl(this.controls[key]);
     }
 
-    document.getElementById('noneToggle').checked = true;
+//    document.getElementById('noneToggle').checked = true;
 
      //Initialize here differet markers the map may need
     console.log("Initialized");
@@ -313,7 +313,16 @@ rhus.map = new Class({
 
   },
 
-  getDateRangePickerCallback : function(reciever){
+clearDateRange : function(element){
+								 this.provider.startDate=null;
+								 this.provider.endDate=null;
+								 //alert("thingsnStuff");
+								 this.addMarkers();
+								 $(picker).value="Choose a Date Range";
+								 },
+
+
+	getDateRangePickerCallback : function(reciever){
     return function(startDate, endDate){
       reciever.provider.startDate = new Date(startDate).format('%Y-%m-%d');
       reciever.provider.endDate = new Date(endDate).format('%Y-%m-%d');
@@ -322,17 +331,23 @@ rhus.map = new Class({
   },
 
 
-  toggleControl : function(element) {
-    console.log(this.controls);
-    for(key in this.controls) {
-      var control = this.controls[key];
-      if(element.value == key && element.checked) {
-        control.activate();
-      } else {
-        control.deactivate();
-      }
-    }
-  },
+															 
+
+startDrawing : function(){
+								 this.controls["polygon"].activate();
+							 },
+
+//  toggleControl : function(element) {
+//    console.log(this.controls);
+//    for(key in this.controls) {
+//      var control = this.controls[key];
+//      if(element.value == key && element.calculate) {
+//        control.activate();
+//      } else {
+//        control.deactivate();
+//      }
+//    }
+//  },
 
 
 

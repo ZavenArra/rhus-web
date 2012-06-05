@@ -136,7 +136,7 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
   position:absolute;
 	  z-index:1;
 	margin-left:180px;
-	margin-top:94px;
+	margin-top:97px;
 }
 
 .socialMedia img{;
@@ -192,11 +192,19 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 
 .dateRange{
 	padding-top:95px;
-	padding-left:600px;
+	padding-right:10px;
 	z-index:20;
+	float:right;
+	width:400px;
 }
 
 .dateRange input{
 	width:170px;
 	color:#5B0829;
+}
+
+.drawingTool{
+	padding-top: 5px;
+	padding-left:500px;
+	z-index:21;
 }
