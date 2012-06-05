@@ -274,6 +274,7 @@ rhus.map = new Class({
           OpenLayers.Handler.Polygon, { 'callbacks': { 'done' : function(geometry){ 
             this.drawFeature(geometry); 
 						this.deactivate();
+						$(polygonToggle).value="Draw a Focus Area";
            // alert(geometry);
           } } } ),
           drag: new OpenLayers.Control.DragFeature(this.zoneLayer)
@@ -335,6 +336,7 @@ clearDateRange : function(element){
 
 startDrawing : function(){
 								 this.controls["polygon"].activate();
+							$(polygonToggle).value="Double Click to Close the Polygon";
 							 },
 
 //  toggleControl : function(element) {
