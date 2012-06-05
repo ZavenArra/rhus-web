@@ -11,6 +11,14 @@ body{
 	font-weight:300;
 }
 
+.polyInstructions{
+width:1050px;
+z-index:200;
+background-color:#000000;
+opacity: .5;
+}
+
+
 p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
 	font-weight:300;
 	letter-spacing:1px;
@@ -208,3 +216,4 @@ p{  font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
 	padding-left:500px;
 	z-index:21;
 }
+
