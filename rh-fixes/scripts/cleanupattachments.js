@@ -25,7 +25,7 @@ db.view('rh-fixes/cleanupattachments', { include_docs: true, limit: 10 }, functi
       var medium = new Buffer(doc.medium, 'base64');
       var thumb = new Buffer(doc.thumb, 'base64');
 
-      console.warn(thumb.toString());
+      //console.warn(thumb.toString());
       var attachment = { name:'thumb.jpg', body: thumb, contentType:"image/jpeg"};
       db.saveAttachment( 
         doc, 
