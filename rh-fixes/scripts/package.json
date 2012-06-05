@@ -1,0 +1,11 @@
+{
+  "name": "node-example",
+    "version": "0.0.1",
+    "dependencies": {
+      "express": "2.5.9",
+      "ntwitter": "0.3.0",
+      "cradle": "0.6.3",
+      "imap": "0.3.1",
+      "twitpic" : "3.0.2"
+    }
+}

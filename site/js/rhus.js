@@ -423,14 +423,14 @@ startDrawing : function(){
 
       console.log("adding new markers");
       responseJSON.rows.each(function(row){
-        longitude = row.value.longitude;
-        latitude = row.value.latitude;
+        longitude = row.value.geometry.coordinates[1];
+        latitude = row.value.geometry.coordinates[0];
         lonlat = new OpenLayers.LonLat(longitude, latitude).transform(
           new OpenLayers.Projection("EPSG:4326"),
           receiver.map.getProjectionObject());
 
         marker = new OpenLayers.Marker(lonlat,receiver.icon.clone());
-        marker.events.register('mousedown', marker, function(evt) { receiver.showCallout(evt.element, lonlat, row.value.id); OpenLayers.Event.stop(evt); });
+        marker.events.register('mousedown', marker, function(evt) { receiver.showCallout(evt.element, lonlat, row.value); OpenLayers.Event.stop(evt); });
         receiver.markers.addMarker(marker);
       });
     }
@@ -531,16 +531,17 @@ startDrawing : function(){
   },
 
 
-  showCallout: function(marker, lonlat, id){
+  showCallout: function(marker, lonlat, doc){
     callout = $('callout');
     callout.style.top = marker.style.top;
     callout.style.left = marker.style.left;
     calloutThumbnail = callout.getElements('.calloutThumbnail')[0];
-    calloutThumbnail.src = this.provider.getThumbSrc(id);
+    calloutThumbnail.src = this.provider.getThumbSrc(doc.id);
 
     calloutLightboxLink = callout.getElements('.calloutLightboxLink')[0];
     //TODO: provider should supply url
-    calloutLightboxLink.href = rhusConfiguration.urlPrefix + id + "/medium.jpg";
+    calloutLightboxLink.href = rhusConfiguration.urlPrefix + doc.id + "/medium.jpg";
+    calloutLightboxLink.title = doc.comment+" "+doc.created_at+" "+doc.reporter;
 	
 		//this is to destroy the callout (single image) milkbox
 		if (this.milkbox != null){
@@ -553,7 +554,6 @@ startDrawing : function(){
 			this.zoneMilkbox.display.destroy();
 		};
     callout.inject(marker, 'before');
-
 
     this.milkbox = new Milkbox({ });
 

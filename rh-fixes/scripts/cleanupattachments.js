@@ -8,7 +8,7 @@ var cradleConnection =  new(cradle.Connection)(configuration.couchHost, configur
 });
 var db = cradleConnection.database(configuration.couchDatabase);
 
-db.view('couchapp/cleanupattachments', { include_docs: true, limit: 10 }, function (err, res) {
+db.view('rh-fixes/cleanupattachments', { include_docs: true, limit: 10 }, function (err, res) {
 
   if(err){
     console.warn('Error: ',err,res);
@@ -25,7 +25,6 @@ db.view('couchapp/cleanupattachments', { include_docs: true, limit: 10 }, functi
       var medium = new Buffer(doc.medium, 'base64');
       var thumb = new Buffer(doc.thumb, 'base64');
 
-      console.warn('Uploading thumb.jpg');
       console.warn(thumb.toString());
       var attachment = { name:'thumb.jpg', body: thumb, contentType:"image/jpeg"};
       db.saveAttachment( 
@@ -37,8 +36,6 @@ db.view('couchapp/cleanupattachments', { include_docs: true, limit: 10 }, functi
             process.exit(1);
           } else {
             console.warn('Uploaded thumb.jpg');
-            console.warn('Uploading medium.jpg');
-            console.log(data);
             attachment = { name:'medium.jpg', body: medium, contentType:"image/jpeg"};
             db.saveAttachment( 
               data, 
@@ -58,7 +55,7 @@ db.view('couchapp/cleanupattachments', { include_docs: true, limit: 10 }, functi
                       delete updateDoc.thumb;
                     }
 
-                    console.warn('Updating updateDocument '+updateDoc.id+" "+updateDoc.rev);
+                    // console.warn('Updating updateDocument '+updateDoc.id+" "+updateDoc.rev);
                     db.save(updateDoc._id, updateDoc._rev, updateDoc,
                       function(err, res){
                         if(err){

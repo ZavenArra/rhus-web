@@ -1,1 +1,1 @@
-function(doc) { emit([doc.deviceuser_identifier, doc.created_at],{'id':doc._id, 'thumb':doc.thumb, 'medium':doc.medium, 'latitude':doc.latitude, 'longitude':doc.longitude, 'reporter':doc.reporter, 'comment':doc.comment, 'created_at':doc.created_at} );}
+function(doc) {  if(doc.doctype != 'zone' && doc.geometry){ emit([doc.deviceuser_identifier, doc.created_at],{'id':doc._id, 'thumb':doc.thumb, 'medium':doc.medium, 'latitude':doc.latitude, 'longitude':doc.longitude, 'reporter':doc.reporter, 'comment':doc.comment, 'created_at':doc.created_at} ); } }
