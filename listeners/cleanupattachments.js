@@ -50,7 +50,6 @@ db.view('couchapp/cleanupattachments', { include_docs: true, limit: 10 }, functi
                 } else {
                   console.warn('Uploaded medium.jpg');
 
-                  
                   db.get(data.id, function(err, updateDoc) {
                     if(updateDoc.medium) {
                       delete updateDoc.medium;
